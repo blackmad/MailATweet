@@ -1,5 +1,6 @@
 module.exports = {
-  uploadToS3: uploadToS3
+  uploadToS3: uploadToS3,
+  makePath: makePath
 }
 
 var randomstring = require("randomstring");
@@ -8,13 +9,17 @@ var s3 = new aws.S3();
 
 const bucketName = 'serverlessimageresize-imagebucket-bu77xeh018n8'
 
+function makePath(path) {
+  return `http://${bucketName}.s3.amazonaws.com/${path}`
+}
+
 function uploadToS3(fileBuffer, callback) {
   // var fileBuffer = fs.readFileSync(localFilePath);
   // var metaData = getContentTypeByFile(fileName);
   const key = randomstring.generate();
 
   const remoteFilename = key + ".png";
-  const remotePath = `http://${bucketName}.s3.amazonaws.com/${remoteFilename}`
+  const remotePath = makePath(remoteFilename);
 
   console.log('putting on s3 at ' + remotePath);
 
