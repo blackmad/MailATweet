@@ -1,9 +1,12 @@
+module.exports = {
+  screenshotAndResizeTweetIdForLob: screenshotAndResizeTweetIdForLob
+}
+
 const puppeteer = require('puppeteer');
 const tmp = require('tmp');
 const sharp = require('sharp');
-var Lob = require('lob')('test_d3321edead8cc2596b15cdd9765f20c5f6d');
-const child_process = require('child_process')
 
+// give it a tweet url and it returns the tweet detail frame rendered
 async function screenshotTweet(tweetUrl) {
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
   const page = await browser.newPage();
@@ -37,11 +40,14 @@ async function screenshotTweet(tweetUrl) {
 
   await browser.close();
 
+  console.log('got the screenshot ' + tmpFileName)
+
   return tmpFileName;
 };
 
 //     /* If using an image, the background image should have dimensions of 1875x1275 pixels. */
 // YES THIS WORKS
+// given an image, max resize it for LOB at 1875x1275
 function resizeForPostcard(imagePath) {
   var imageSharp = sharp(imagePath)
 
@@ -53,13 +59,14 @@ function resizeForPostcard(imagePath) {
         imageSharp = imageSharp.rotate(270);
       }
 
-      var tmpFileName = tmp.tmpNameSync() + '.png';
+      // var tmpFileName = tmp.tmpNameSync() + '.png';
 
       return imageSharp
         .resize(1875, 1275)
         .max()
         .toBuffer()
         .then(outputBuffer => {
+          console.log('resizing second pass');
           // the prior code only maximizes one dimension, now we need to resize it again without max()
           // this is a dumb hack
           return sharp({
@@ -71,52 +78,14 @@ function resizeForPostcard(imagePath) {
             }
           })
           .overlayWith(outputBuffer)
-          .toFile(tmpFileName)
-          .then(() => {return tmpFileName;});
+          .png()
+          .toBuffer();
         })
     })
 }
 
-
-function sendPostcard({frontFilePath, address, message}) {
-  return Lob.postcards.create({
-    description: 'My First Postcard',
-    to: address,
-    front: frontFilePath,
-    message: message,
+async function screenshotAndResizeTweetIdForLob(tweetId) {
+  return screenshotTweet(`https://twitter.com/Bodegacats_/status/${tweetId}`).then((fileName) => {
+    return resizeForPostcard(fileName);
   })
 }
-
-(async () => {
-  const fileName = await screenshotTweet('https://twitter.com/Bodegacats_/status/914092267983589376');
-  // const fileName = await screenshotTweet('https://twitter.com/horse_ebooks/status/218439593240956928?lang=en')
-  console.log(fileName);
-  const newFileName = await resizeForPostcard(fileName);
-  console.log(newFileName)
-  const { exec } = require('child_process');
-  exec(`open ${newFileName}`)
-  const s3cmd = `s3cmd put ${newFileName} s3://serverlessimageresize-imagebucket-bu77xeh018n8`;
-  console.log(s3cmd)
-  console.log(child_process.execSync(s3cmd));
-  const path = require('path');
-  const s3path = 'http://serverlessimageresize-imagebucket-bu77xeh018n8.s3.amazonaws.com/' + path.basename(newFileName);
-  console.log(s3path);
-  sendPostcard({
-    frontFilePath: s3path,
-    address: {
-      name: 'David Blackman',
-      address_line1: '52 Ten Eyck St',
-      address_line2: 'Apt 3B',
-      address_city: 'Brooklyn',
-      address_state: 'NY',
-      address_zip: '11206',
-      address_country: 'US'
-    },
-    message: 'this is a test message!'
-  }).then(function (res) {
-    console.log(res.data);
-  })
-  .catch(function (e) {
-    console.log(e);
-  });
-})();
