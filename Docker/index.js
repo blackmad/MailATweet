@@ -40,12 +40,12 @@ function sendPostcard({frontFilePath, address, message}) {
   })
 }
 
-app.get('/sendTweet', function (req, res) {
+app.get('/sendTweet', async function (req, res) {
   const s3path = getImageFromId(req.query.id);
   console.log(s3path);
   console.log(req.params);
   console.log(req.params.message);
-  sendPostcard({
+  await sendPostcard({
     frontFilePath: s3path,
     address: {
       name: req.query.name,
@@ -58,10 +58,11 @@ app.get('/sendTweet', function (req, res) {
     },
     message: req.query.message
   }).then(function (resp) {
-    console.log(resp.data);
-    res.send(resp.data);
+    console.log(resp['id']);
+    res.send(resp);
   })
   .catch(function (e) {
+    console.log('error');
     console.log(e);
     res.send(e);
   });
