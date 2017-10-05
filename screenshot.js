@@ -2,26 +2,26 @@ module.exports = {
   screenshotAndResizeTweetIdForLob: screenshotAndResizeTweetIdForLob
 }
 
-const puppeteer = require('puppeteer');
-const tmp = require('tmp');
-const sharp = require('sharp');
+const puppeteer = require('puppeteer')
+const tmp = require('tmp')
+const sharp = require('sharp')
 
 // give it a tweet url and it returns the tweet detail frame rendered
-async function screenshotTweet(tweetUrl) {
-  const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
-  const page = await browser.newPage();
-  await page.setViewport({width: 1280, height: 2000, deviceScaleFactor: 2});
-  await page.emulateMedia('screen');
-  await page.goto(tweetUrl, {waitUntil: 'networkidle'});
+async function screenshotTweet (tweetUrl) {
+  const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']})
+  const page = await browser.newPage()
+  await page.setViewport({width: 1280, height: 2000, deviceScaleFactor: 2})
+  await page.emulateMedia('screen')
+  await page.goto(tweetUrl, {waitUntil: 'networkidle'})
   const clip = await page.evaluate(() => {
     // in .permalink remove every node after .permalink-tweet-container
-    $('.permalink-tweet-container').nextAll('div').remove();
-    $('.permalink').nextAll('div').remove();
-    $('.PermalinkProfile-dismiss').remove();
+    $('.permalink-tweet-container').nextAll('div').remove()
+    $('.permalink').nextAll('div').remove()
+    $('.PermalinkProfile-dismiss').remove()
 
     // need to fix the rounded corners too
-    $('.permalink').css('border', '0px');
-    $('.permalink').css('border-radius', '0px');
+    $('.permalink').css('border', '0px')
+    $('.permalink').css('border-radius', '0px')
 
     return {
       'width': $('.permalink').width(),
@@ -29,26 +29,26 @@ async function screenshotTweet(tweetUrl) {
       'x': $('.permalink').offset()['left'],
       'y': $('.permalink').offset()['top']
     }
-  });
+  })
 
-  var tmpFileName = tmp.tmpNameSync() + '.png';
+  var tmpFileName = tmp.tmpNameSync() + '.png'
 
   await page.screenshot({
     path: tmpFileName,
     clip: clip
-  });
+  })
 
-  await browser.close();
+  await browser.close()
 
   console.log('got the screenshot ' + tmpFileName)
 
-  return tmpFileName;
+  return tmpFileName
 };
 
 //     /* If using an image, the background image should have dimensions of 1875x1275 pixels. */
 // YES THIS WORKS
 // given an image, max resize it for LOB at 1875x1275
-function resizeForPostcard(imagePath) {
+function resizeForPostcard (imagePath) {
   var imageSharp = sharp(imagePath)
 
   return imageSharp
@@ -56,7 +56,7 @@ function resizeForPostcard(imagePath) {
     .then(info => {
       if (info['height'] > info['width']) {
         console.log('h > w - rotating')
-        imageSharp = imageSharp.rotate(270);
+        imageSharp = imageSharp.rotate(270)
       }
 
       // var tmpFileName = tmp.tmpNameSync() + '.png';
@@ -66,7 +66,7 @@ function resizeForPostcard(imagePath) {
         .max()
         .toBuffer()
         .then(outputBuffer => {
-          console.log('resizing second pass');
+          console.log('resizing second pass')
           // the prior code only maximizes one dimension, now we need to resize it again without max()
           // this is a dumb hack
           return sharp({
@@ -79,13 +79,13 @@ function resizeForPostcard(imagePath) {
           })
           .overlayWith(outputBuffer)
           .png()
-          .toBuffer();
+          .toBuffer()
         })
     })
 }
 
-async function screenshotAndResizeTweetIdForLob(tweetId) {
+async function screenshotAndResizeTweetIdForLob (tweetId) {
   return screenshotTweet(`https://twitter.com/Bodegacats_/status/${tweetId}`).then((fileName) => {
-    return resizeForPostcard(fileName);
+    return resizeForPostcard(fileName)
   })
 }

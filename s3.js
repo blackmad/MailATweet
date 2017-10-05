@@ -3,25 +3,25 @@ module.exports = {
   makePath: makePath
 }
 
-var randomstring = require("randomstring");
-var aws = require('aws-sdk');
-var s3 = new aws.S3();
+var randomstring = require('randomstring')
+var aws = require('aws-sdk')
+var s3 = new aws.S3()
 
 const bucketName = 'serverlessimageresize-imagebucket-bu77xeh018n8'
 
-function makePath(path) {
+function makePath (path) {
   return `http://${bucketName}.s3.amazonaws.com/${path}`
 }
 
-function uploadToS3(fileBuffer, callback) {
+function uploadToS3 (fileBuffer, callback) {
   // var fileBuffer = fs.readFileSync(localFilePath);
   // var metaData = getContentTypeByFile(fileName);
-  const key = randomstring.generate();
+  const key = randomstring.generate()
 
-  const remoteFilename = key + ".png";
-  const remotePath = makePath(remoteFilename);
+  const remoteFilename = key + '.png'
+  const remotePath = makePath(remoteFilename)
 
-  console.log('putting on s3 at ' + remotePath);
+  console.log('putting on s3 at ' + remotePath)
 
   return s3.putObject({
     ACL: 'public-read',
@@ -30,7 +30,7 @@ function uploadToS3(fileBuffer, callback) {
     Bucket: bucketName,
     ContentType: 'image/png'
     // ContentType: metaData
-  }, function(error, response) {
+  }, function (error, response) {
     // console.log('uploaded file[' + fileName + '] to [' + remoteFilename + '] as [' + metaData + ']');
     // console.log(arguments);
     console.log('error: ' + error)
@@ -38,6 +38,6 @@ function uploadToS3(fileBuffer, callback) {
     callback({
       id: key,
       path: remotePath
-    });
-  });
+    })
+  })
 }

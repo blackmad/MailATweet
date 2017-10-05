@@ -1,19 +1,19 @@
-//Load express module with `require` directive
+// Load express module with `require` directive
 var express = require('express')
 var app = express()
-var screenshot = require('./screenshot');
-var s3 = require('./s3');
+var screenshot = require('./screenshot')
+var s3 = require('./s3')
 
 // TODO: env variable
 // TODO: reasonable return from /tweet
 // TODO: commit
 // TODO: deploy to docker
 
-var Lob = require('lob')('test_d3321edead8cc2596b15cdd9765f20c5f6d');
+var Lob = require('lob')('test_d3321edead8cc2596b15cdd9765f20c5f6d')
 
-//Define request response in root URL (/)
+// Define request response in root URL (/)
 app.get('/', function (req, res) {
-    res.send('Hello World!')
+  res.send('Hello World!')
 })
 
 app.get('/previewTweet', function (req, res) {
@@ -25,13 +25,12 @@ app.get('/previewTweet', function (req, res) {
   })
 })
 
-function getImageFromId(id) {
+function getImageFromId (id) {
   // for now, nothing fancy
-  return s3.makePath(id);
+  return s3.makePath(id)
 }
 
-
-function sendPostcard({frontFilePath, address, message}) {
+function sendPostcard ({frontFilePath, address, message}) {
   return Lob.postcards.create({
     description: 'My First Postcard',
     to: address,
@@ -41,10 +40,10 @@ function sendPostcard({frontFilePath, address, message}) {
 }
 
 app.get('/sendTweet', async function (req, res) {
-  const s3path = getImageFromId(req.query.id);
-  console.log(s3path);
-  console.log(req.params);
-  console.log(req.params.message);
+  const s3path = getImageFromId(req.query.id)
+  console.log(s3path)
+  console.log(req.params)
+  console.log(req.params.message)
   await sendPostcard({
     frontFilePath: s3path,
     address: {
@@ -58,17 +57,17 @@ app.get('/sendTweet', async function (req, res) {
     },
     message: req.query.message
   }).then(function (resp) {
-    console.log(resp['id']);
-    res.send(resp);
+    console.log(resp['id'])
+    res.send(resp)
   })
   .catch(function (e) {
-    console.log('error');
-    console.log(e);
-    res.send(e);
-  });
+    console.log('error')
+    console.log(e)
+    res.send(e)
+  })
 })
 
-//Launch listening server on port 8081
+// Launch listening server on port 8081
 app.listen(8081, function () {
-    console.log('app listening on port 8081!')
+  console.log('app listening on port 8081!')
 })
