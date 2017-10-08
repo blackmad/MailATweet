@@ -4,9 +4,12 @@
   "private": true,
   "proxy": "http://localhost:8081/",
   "dependencies": {
+    "google-maps": "^3.2.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
+    "react-places-autocomplete": "^5.4.3",
     "react-scripts": "1.0.14",
+    "react-stripe-checkout": "^2.6.3",
     "react-tweet-embed": "^1.0.8",
     "redbox-react": "^1.5.0",
     "redux-form": "^7.0.4",

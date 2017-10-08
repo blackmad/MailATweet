@@ -14,22 +14,6 @@ const store = (window.devToolsExtension
   ? window.devToolsExtension()(createStore)
   : createStore)(reducer)
 
-/* TODO:
-  get a wizard working
-  - validate url or id
-  - confirm it's the right tweet
-  - enter name + (gmaps) address
-  - generate preview of tweet + confirm
-  - send to LOB!
-  get font-awesome importing
-  wrap the entire thing in some chrome
-  implement login
-  splash page
-  address book store
-  disclaimer that I can read your postcards
-*/
-
-
 const showResults = values =>
   new Promise(resolve => {
     setTimeout(() => {
@@ -44,7 +28,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <div className="App">
-          <h2>Form</h2>
+          <h2>Form (in index.js)</h2>
 
           <WizardForm onSubmit={showResults} />
         </div>

@@ -5,11 +5,19 @@ module.exports = {
 
 var randomstring = require('randomstring')
 var aws = require('aws-sdk')
-var s3 = new aws.S3()
+const secrets = require('load-secrets')
+
+var s3 = new aws.S3({
+  accessKeyId: secrets.AWS_ACCESS_KEY_ID,
+  secretAccessKey: secrets.AWS_SECRET_ACCESS_KEY
+}
 
 const bucketName = 'serverlessimageresize-imagebucket-bu77xeh018n8'
 
 function makePath (path) {
+  if (!path.endsWith('.png')) {
+    path += '.png';
+  }
   return `http://${bucketName}.s3.amazonaws.com/${path}`
 }
 

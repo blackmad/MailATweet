@@ -1,6 +1,5 @@
 import React from 'react'
 import { reduxForm } from 'redux-form'
-import validate from './validate'
 import { formValueSelector } from 'redux-form';  // ES6
 import { connect } from 'react-redux'
 import { extractTweetId } from './utils'
@@ -13,7 +12,6 @@ const WizardFormSecondPage = props => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <TweetEmbed id={tweetId} />
       <div>
         <h2>Is this the tweet you were thinking of?</h2>
       </div>
@@ -25,6 +23,7 @@ const WizardFormSecondPage = props => {
           Yes!
         </button>
       </div>
+      <TweetEmbed id={tweetId} />
     </form>
   )
 }
@@ -32,8 +31,7 @@ const WizardFormSecondPage = props => {
 const tmpForm = reduxForm({
   form: 'wizard', //Form name is same
   destroyOnUnmount: false,
-  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
-  validate
+  forceUnregisterOnUnmount: true // <------ unregister fields on unmount
 })(WizardFormSecondPage)
 
 const selector = formValueSelector('wizard')

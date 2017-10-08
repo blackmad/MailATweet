@@ -3,22 +3,24 @@ var express = require('express')
 var app = express()
 var screenshot = require('./screenshot')
 var s3 = require('./s3')
+const secrets = require('load-secrets')
 
-// TODO: env variable
-// TODO: reasonable return from /tweet
-// TODO: commit
-// TODO: deploy to docker
+console.log('secrets')
+console.log(secrets)
 
-var Lob = require('lob')('test_d3321edead8cc2596b15cdd9765f20c5f6d')
+// TODO: oh, these should all be POSTs
+
+var TestLob = require('lob')(secrets.LOB_TEST_KEY)
+var ProdLob = require('lob')(secrets.LOB_PROD_KEY)
 
 // Define request response in root URL (/)
-app.get('/', function (req, res) {
+app.get('/api', function (req, res) {
   res.send('Hello World!')
 })
 
-app.get('/previewTweet', function (req, res) {
-  console.log(req.query.tweetId)
-  const tweetId = '446452341475409921'
+app.get('/api/previewTweet', function (req, res) {
+  console.log(req.query.id)
+  const tweetId = req.query.id;
   screenshot.screenshotAndResizeTweetIdForLob(tweetId).then((fileBuffer) => {
     console.log('sending to s3')
     s3.uploadToS3(fileBuffer, (resp) => res.send(resp))
@@ -30,8 +32,8 @@ function getImageFromId (id) {
   return s3.makePath(id)
 }
 
-function sendPostcard ({frontFilePath, address, message}) {
-  return Lob.postcards.create({
+function previewPostcard({frontFilePath, address, message}) {
+  return TestLob.postcards.create({
     description: 'My First Postcard',
     to: address,
     front: frontFilePath,
@@ -39,12 +41,27 @@ function sendPostcard ({frontFilePath, address, message}) {
   })
 }
 
-app.get('/sendTweet', async function (req, res) {
+function sendPostcard({frontFilePath, address, message}) {
+  return ProdLob.postcards.create({
+    description: 'My First Postcard',
+    to: address,
+    front: frontFilePath,
+    message: message
+  })
+}
+
+app.get('/api/sendTweet', async function (req, res) {
   const s3path = getImageFromId(req.query.id)
   console.log(s3path)
   console.log(req.params)
   console.log(req.params.message)
-  await sendPostcard({
+
+  var sendFunc = sendPostcard;
+  if (req.params.test) {
+    sendFunc = previewPostcard;
+  }
+
+  await sendFunc({
     frontFilePath: s3path,
     address: {
       name: req.query.name,
@@ -55,7 +72,7 @@ app.get('/sendTweet', async function (req, res) {
       address_zip: req.query.address_zip,
       address_country: req.query.address_country
     },
-    message: req.query.message
+    message: req.query.message || 'Tweet for you.'
   }).then(function (resp) {
     console.log(resp['id'])
     res.send(resp)

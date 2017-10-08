@@ -1,8 +1,10 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
-import validate from './validate'
 import renderField from './renderField'
-// import extractTweetId from './validate'
+import { extractTweetId } from './utils.js'
+
+const required = value => (value ? undefined : 'Required')
+const mustBeTweet = value => value && extractTweetId(value) === null ? "Invalid input" : undefined
 
 const WizardFormFirstPage = props => {
   const { handleSubmit } = props
@@ -12,8 +14,8 @@ const WizardFormFirstPage = props => {
         name="tweetUrlOrId"
         type="text"
         component={renderField}
-        // normalize={extractTweetId}
         label="Tweet URL or ID"
+        validate={[required, mustBeTweet]}
       />
       <div>
         <button type="submit" className="next">
@@ -27,6 +29,5 @@ const WizardFormFirstPage = props => {
 export default reduxForm({
   form: 'wizard', // <------ same form name
   destroyOnUnmount: false, // <------ preserve form data
-  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
-  validate
+  forceUnregisterOnUnmount: true // <------ unregister fields on unmount
 })(WizardFormFirstPage)
