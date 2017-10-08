@@ -8,7 +8,10 @@ const secrets = require('load-secrets')
 console.log('secrets')
 console.log(secrets)
 
+var stripe = require('stripe')(secrets.STRIPE_TEST_SECRET_KEY)
+
 // TODO: oh, these should all be POSTs
+// TODO: learn express routes, decompose into multiple files
 
 var TestLob = require('lob')(secrets.LOB_TEST_KEY)
 var ProdLob = require('lob')(secrets.LOB_PROD_KEY)
@@ -17,6 +20,18 @@ var ProdLob = require('lob')(secrets.LOB_PROD_KEY)
 app.get('/api', function (req, res) {
   res.send('Hello World!')
 })
+
+const postStripeCharge = res => (stripeErr, stripeRes) => {
+  if (stripeErr) {
+    res.status(500).send({ error: stripeErr });
+  } else {
+    res.status(200).send({ success: stripeRes });
+  }
+}
+
+app.post('/payAndSendTweet', (req, res) => {
+  stripe.charges.create(req.body, postStripeCharge(req, res));
+});
 
 app.get('/api/previewTweet', function (req, res) {
   console.log(req.query.id)

@@ -8,7 +8,7 @@ const STRIPE_PUBLISHABLE = process.env.NODE_ENV === 'production'
 
 const PAYMENT_SERVER_URL = process.env.NODE_ENV === 'production'
   ? 'http://myapidomain.com'
-  : 'http://localhost:8080';
+  : 'http://localhost:8081';
 
 
 const CURRENCY = 'USD';

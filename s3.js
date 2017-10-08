@@ -10,7 +10,7 @@ const secrets = require('load-secrets')
 var s3 = new aws.S3({
   accessKeyId: secrets.AWS_ACCESS_KEY_ID,
   secretAccessKey: secrets.AWS_SECRET_ACCESS_KEY
-}
+});
 
 const bucketName = 'serverlessimageresize-imagebucket-bu77xeh018n8'
 
