@@ -7,9 +7,8 @@ const STRIPE_PUBLISHABLE = process.env.NODE_ENV === 'production'
   : 'pk_test_x3cWWClZyuk8ijM99TYhgrOY';
 
 const PAYMENT_SERVER_URL = process.env.NODE_ENV === 'production'
-  ? 'http://myapidomain.com'
+  ? 'http://myapidomain.com/api/payAndSendTweet'
   : 'http://localhost:8081/api/payAndSendTweet';
-
 
 const CURRENCY = 'USD';
 
@@ -20,6 +19,7 @@ const successPayment = data => {
 };
 
 const errorPayment = data => {
+  console.log(data)
   alert('Payment Error');
 };
 
@@ -34,7 +34,7 @@ const onToken = (amount, description) => token =>
     .then(successPayment)
     .catch(errorPayment);
 
-const Checkout = ({ name, description, amount, values}) =>
+const Checkout = ({ name, description, amount }) =>
   <StripeCheckout
     name={name}
     description={description}
@@ -42,7 +42,6 @@ const Checkout = ({ name, description, amount, values}) =>
     token={onToken(amount, description)}
     currency={CURRENCY}
     stripeKey={STRIPE_PUBLISHABLE}
-    {...values}
   />
 
 export default Checkout;

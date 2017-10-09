@@ -1,6 +1,6 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
-import renderField from './renderField'
+import { renderField, renderTextArea} from './renderField'
 
 const required = value => (value ? undefined : 'Required')
 const maxLength = max => value =>
@@ -327,7 +327,7 @@ const WizardFormThirdPage = props => {
         label="Message"
         name="message"
         type="textarea"
-        component={renderField}
+        component={renderTextArea}
         placeholder="Write your message here (less than 300 characters)"
         validate={[maxLength300]}
       />

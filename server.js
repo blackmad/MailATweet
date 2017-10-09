@@ -16,6 +16,17 @@ var stripe = require('stripe')(secrets.STRIPE_TEST_SECRET_KEY)
 var TestLob = require('lob')(secrets.LOB_TEST_KEY)
 var ProdLob = require('lob')(secrets.LOB_PROD_KEY)
 
+const FRONTEND_DEV_URLS = [ 'http://localhost:3000' ];
+
+const FRONTEND_PROD_URLS = [
+  'https://www.yourdomain.com',
+  'https://yourdomain.com'
+];
+
+const CORS_WHITELIST = process.env.NODE_ENV === 'production'
+  ? FRONTEND_PROD_URLS
+  : FRONTEND_DEV_URLS;
+
 // Define request response in root URL (/)
 app.get('/api', function (req, res) {
   res.send('Hello World!')
@@ -98,6 +109,18 @@ app.get('/api/sendTweet', async function (req, res) {
     res.send(e)
   })
 })
+
+const cors = require('cors');
+const bodyParser = require('body-parser');
+
+const corsOptions = {
+  origin: (origin, callback) =>
+    (CORS_WHITELIST.indexOf(origin) !== -1)
+      ? callback(null, true)
+      : callback(new Error('Not allowed by CORS'))
+};
+
+app.use(cors());
 
 // Launch listening server on port 8081
 app.listen(8081, function () {

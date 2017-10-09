@@ -21,7 +21,9 @@ class WizardForm extends Component {
     this.state = {
       page: 1,
       needPostcardPreview: true,
-      postcardPreview: null
+      postcardPreview: null,
+      postcardPreviewImagesDone: false,
+      numPostcardPreviewTries: 0
     }
   }
 
@@ -49,6 +51,25 @@ class WizardForm extends Component {
     return {fetchingTweetPreview: true, needPostcardPreview: true}
   }
 
+  // // I'm sorry for using "that", I promise to fix
+  // checkPostcardPreviewImageReady(that, url) {
+  //   console.log('trying to fetch: ' + url)
+  //   fetch(url)
+  //     .then(function(response) {
+  //       console.log(response)
+  //       if (response.status >= 400) {
+  //         if (that.state.numPostcardPreviewTries < 6) {
+  //           setTimeout(() => {
+  //             that.setState(updateObject(that.state, {numPostcardPreviewTries: that.state.numPostcardPreviewTries + 1}))
+  //             that.checkPostcardPreviewImageReady(that, url)
+  //           }, 1000);
+  //         } else {
+  //           throw new Error("Previews never laoded :-(");
+  //         }
+  //       }
+  //       that.setState(updateObject(that.state, {postcardPreviewImagesDone: true}));
+  //     })
+  // }
 
   fetchPostcard({values, isTest, id}) {
     const params = updateObject(values, {test: isTest, id: id})
@@ -70,6 +91,7 @@ class WizardForm extends Component {
       .then(function(data) {
         console.log({postcardPreview: data})
         console.log('updating postcard preview state')
+        // that.checkPostcardPreviewImageReady(that, fetch(data.thumbnails[0].medium))
         that.setState(updateObject(that.state, {fetchingPostcardPreview: false, postcardPreview: data}))
       });
     return {fetchingPostcardPreview: true}
@@ -115,6 +137,7 @@ class WizardForm extends Component {
             previousPage={this.previousPage}
             onSubmit={this.nextPage}
             postcardPreview={this.state.postcardPreview}
+            postcardPreviewImagesDone={this.state.postcardPreviewImagesDone}
           />}
       </div>
     )

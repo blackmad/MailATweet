@@ -21,3 +21,8 @@ body {
 .StripeElement.PaymentRequestButton {
   padding: 0;
 }
+
+.ps-disclaimer {
+  margin-top: 2rem;
+  padding: 0rem 7rem;
+}
