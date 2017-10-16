@@ -1,6 +1,8 @@
+redo waiting for the preview image
 send postcard on stripe successful
 have a final thank you page
 do something if the user cancels stripe
+make sure prod vs test lob key is working
 
 get gmaps working
 

@@ -83,7 +83,9 @@ app.get('/api/sendTweet', async function (req, res) {
   console.log(req.params.message)
 
   var sendFunc = sendPostcard;
+  var sendFunc = previewPostcard;
   if (req.params.test) {
+    console.log('sending prod postcard for reals')
     sendFunc = previewPostcard;
   }
 

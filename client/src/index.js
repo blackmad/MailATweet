@@ -28,13 +28,13 @@ class App extends Component {
   render() {
     return (
 
- <div class="container">
-      <div class="header clearfix">
+ <div className="container">
+      <div className="header clearfix">
 
-        <h3 class="text-muted">Mail-A-Tweet</h3>
+        <h3 className="text-muted">Mail-A-Tweet</h3>
       </div>
 
-      <div class="jumbotron">
+      <div className="jumbotron">
         <Provider store={store}>
         <div className="App">
           <WizardForm onSubmit={showResults} />
@@ -42,17 +42,17 @@ class App extends Component {
       </Provider>
       </div>
 
-      <div class="footer clearfix">
-          <div class="postcard-icon"></div>
-          <div class="clearfix">
-            <div class="float-right">
-              <div class="text-left">
+      <div className="footer clearfix">
+          <div className="postcard-icon"></div>
+          <div className="clearfix">
+            <div className="float-right">
+              <div className="text-left">
                 Love,<br/>
                 <a href="https://twitter.com/blackmad">@blackmad</a>
               </div>
             </div>
           </div>
-          <div class="ps-disclaimer text-justify">
+          <div className="ps-disclaimer text-justify">
               <strong>P.S.</strong> The API I use saves every postcard generated for at least a while, so
               I can read anything you write. I will do my best to not look except in cases where I'm
               debugging something or someone asks me to look specifically.

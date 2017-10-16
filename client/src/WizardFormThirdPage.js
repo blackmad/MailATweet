@@ -1,13 +1,14 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import { renderField, renderTextArea} from './renderField'
+import { connect } from 'react-redux';
 
 const required = value => (value ? undefined : 'Required')
 const maxLength = max => value =>
 value && value.length > max ? `Must be ${max} characters or less` : undefined
 const maxLength300 = maxLength(300)
 
-const WizardFormThirdPage = props => {
+let WizardFormThirdPage = props => {
   const { handleSubmit, previousPage } = props
 
   return (
@@ -343,8 +344,28 @@ const WizardFormThirdPage = props => {
     </form>
   )
 }
-export default reduxForm({
+WizardFormThirdPage = reduxForm({
   form: 'wizard', // <------ same form name
   destroyOnUnmount: false, // <------ preserve form data
-  forceUnregisterOnUnmount: true // <------ unregister fields on unmount
+  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
+  enableReinitialize : true // this is needed!!
 })(WizardFormThirdPage)
+
+if (process.env.NODE_ENV === 'development') {
+  WizardFormThirdPage = connect(
+    state => ({
+      initialValues:  {
+        name: 'David Blackman',
+        address_line1: '52 Ten Eyck St',
+        address_line2: 'Apt 3B',
+        address_city: 'Brooklyn',
+        address_state: 'NY',
+        address_zip: '11206',
+        address_country: 'US',
+        message: 'Hello!!!!'
+      }
+    })
+  )(WizardFormThirdPage);
+}
+
+export default WizardFormThirdPage;
