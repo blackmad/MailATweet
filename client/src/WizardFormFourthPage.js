@@ -1,29 +1,7 @@
 import React from 'react'
 import { reduxForm } from 'redux-form'
-import StripeCheckout from 'react-stripe-checkout';
 import Checkout from './Checkout.js'
-
- class RetryingImage extends React.Component{
-    constructor(props){
-      super(props);
-      this.state={src: this.props.src};
-      this.onError=this.onError.bind(this);
-    }
-
-
-    onError(){
-      console.log("error: could not find picture");
-      setTimeout(() => {
-        console.log("retrying image")
-        const src = this.props.src;
-        this.setState({src: src + "&nonce=" + new Date().getUTCSeconds()});
-      }, 1000);
-     };
-
-    render(){
-      return <img onError={this.onError} src={this.state.src}/>;
-    }
-  }
+import RetryingImage from './RetryingImage.js'
 
 const WizardFormFourthPage = props => {
   const { handleSubmit, previousPage, postcardPreview, postcardPreviewImagesDone } = props
@@ -57,21 +35,21 @@ const WizardFormFourthPage = props => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
       <div>
-        <h2>Postcard Preview (will take a second to load)</h2>
-        <h3>Front</h3>
-        <RetryingImage src={postcardPreview.thumbnails[0].medium}/>
-        <h3>Back</h3>
-        <RetryingImage src={postcardPreview.thumbnails[1].medium}/>
+        <h1>Postcard Preview</h1>
+        <RetryingImage title="Front" src={postcardPreview.thumbnails[0].medium}/>
+        <RetryingImage title="Back" src={postcardPreview.thumbnails[1].medium}/>
       </div>
-      <h2>If it all looks good, then ... </h2>
-      <Checkout
-        name={'Pay for and send this postcard!'}
-        description={'Lob charges $0.70 to send postcards. $1 is a round number.'}
-        amount={1}
-      />
-    </form>
+      <div>
+        <h2>If it all looks good, then ... </h2>
+        <Checkout
+          name={'Pay for and send this postcard!'}
+          description={'Lob charges $0.70 to send postcards. $1 is a round number.'}
+          amount={1}
+        />
+      </div>
+    </div>
   )
 }
 

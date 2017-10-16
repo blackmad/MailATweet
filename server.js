@@ -1,20 +1,21 @@
 // Load express module with `require` directive
-var express = require('express')
-var app = express()
-var screenshot = require('./screenshot')
-var s3 = require('./s3')
+const express = require('express')
+const app = express()
+const screenshot = require('./screenshot')
+const s3 = require('./s3')
+const path = require('path');
 const secrets = require('load-secrets')
 
 console.log('secrets')
 console.log(secrets)
 
-var stripe = require('stripe')(secrets.STRIPE_TEST_SECRET_KEY)
+const stripe = require('stripe')(secrets.STRIPE_TEST_SECRET_KEY)
 
 // TODO: oh, these should all be POSTs
 // TODO: learn express routes, decompose into multiple files
 
-var TestLob = require('lob')(secrets.LOB_TEST_KEY)
-var ProdLob = require('lob')(secrets.LOB_PROD_KEY)
+const TestLob = require('lob')(secrets.LOB_TEST_KEY)
+const ProdLob = require('lob')(secrets.LOB_PROD_KEY)
 
 const FRONTEND_DEV_URLS = [ 'http://localhost:3000' ];
 
@@ -40,7 +41,7 @@ const postStripeCharge = res => (stripeErr, stripeRes) => {
   }
 }
 
-app.post('/payAndSendTweet', (req, res) => {
+app.post('/api/payAndSendTweet', (req, res) => {
   stripe.charges.create(req.body, postStripeCharge(req, res));
 });
 
@@ -123,6 +124,14 @@ const corsOptions = {
 };
 
 app.use(cors());
+
+// Serve static assets
+app.use(express.static(path.resolve(__dirname, 'client', 'build')));
+
+// Always return the main index.html, so react-router render the route in the client
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+});
 
 // Launch listening server on port 8081
 app.listen(8081, function () {
