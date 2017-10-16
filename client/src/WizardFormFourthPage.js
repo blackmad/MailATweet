@@ -36,7 +36,7 @@ const WizardFormFourthPage = props => {
 
   return (
     <div>
-      <div>
+    <div>
         <h1>Postcard Preview</h1>
         <RetryingImage title="Front" src={postcardPreview.thumbnails[0].medium}/>
         <RetryingImage title="Back" src={postcardPreview.thumbnails[1].medium}/>

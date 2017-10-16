@@ -57,6 +57,9 @@ class App extends Component {
               I can read anything you write. I will do my best to not look except in cases where I'm
               debugging something or someone asks me to look specifically.
           </div>
+          <div className="ps-disclaimer text-justify">
+              <strong>P.P.S.</strong> <a href="/about.html">More about this project</a>
+          </div>
         </div>
       </div>
 

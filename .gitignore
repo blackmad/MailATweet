@@ -57,7 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
-*.png
-*.jpg
-
 secrets.json
+
+.DS_Store
