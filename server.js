@@ -5,6 +5,7 @@ const screenshot = require('./screenshot')
 const gcloudStorage = require('./gcloud-storage')
 const path = require('path');
 const storageLayer = gcloudStorage
+const model = require('./model-datastore')
 
 var secrets = require('load-secrets')
 console.log('secrets')
@@ -47,18 +48,34 @@ app.get('/api', function (req, res) {
   res.send('Hello World!')
 })
 
-const postStripeCharge = res => (stripeErr, stripeRes) => {
+const postStripeCharge = (res, lobData) => (stripeErr, stripeRes) => {
   if (stripeErr) {
     console.log('stripe error')
     console.log(stripeErr)
     res.status(500).send({ error: stripeErr });
   } else {
-    res.status(200).send({ success: stripeRes });
+    var sendFunc = previewPostcard;
+    if (process.env.NODE_ENV === 'production') {
+      console.log('sending prod postcard for reals post stripe')
+      sendFunc = sendPostcard;
+    }
+
+    sendFunc(lobData).then(() =>
+      res.status(200).send({ success: stripeRes })
+    )
   }
 }
 
 app.post('/api/payAndSendTweet', (req, res) => {
-  stripe.charges.create(req.body, postStripeCharge(res));
+  console.log(req.body)
+  const data = {
+      amount: req.body.amount,
+      description: req.body.description,
+      currency: req.body.currency,
+      source: req.body.source
+    }
+  const lobData = extractLobParams(req);
+  stripe.charges.create(data, postStripeCharge(res, lobData));
 });
 
 app.get('/api/previewTweet', function (req, res) {
@@ -93,21 +110,13 @@ function sendPostcard({frontFilePath, address, message}) {
   })
 }
 
-app.get('/api/sendTweet', async function (req, res) {
+function extractLobParams(req) {
   const s3path = getImageFromId(req.query.id)
   console.log(s3path)
-  console.log(req.params)
-  console.log(req.params.message)
 
-  var sendFunc = sendPostcard;
-  var sendFunc = previewPostcard;
-  if (req.params.test) {
-    console.log('sending prod postcard for reals')
-    sendFunc = previewPostcard;
-  }
-
-  await sendFunc({
+  const data = {
     frontFilePath: s3path,
+    email: req.query.email,
     address: {
       name: req.query.name,
       address_line1: req.query.address_line1,
@@ -118,8 +127,35 @@ app.get('/api/sendTweet', async function (req, res) {
       address_country: req.query.address_country
     },
     message: req.query.message || 'Tweet for you.'
-  }).then(function (resp) {
+  }
+
+  return data;
+}
+
+app.get('/api/sendTweet', async function (req, res) {
+console.log(req.query)
+  console.log('test? ' + req.query.test)
+
+  var sendFunc = sendPostcard;
+  var sendFunc = previewPostcard;
+  if (req.query.test === 'true') {
+    console.log('generating test postcard')
+    sendFunc = previewPostcard;
+  } else {
+    console.log('sending prod postcard for reals')
+    sendFunc = previewPostcard;
+  }
+
+  const data = extractLobParams(req);
+  await sendFunc(data).then(function (resp) {
     console.log(resp['id'])
+    // getModel().create(data, (err, savedData) => {
+    //   if (err) {
+    //     res.send(err);
+    //   } else {
+    //     res.send(resp)
+    //   }
+    // })
     res.send(resp)
   })
   .catch(function (e) {

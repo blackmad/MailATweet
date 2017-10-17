@@ -6,7 +6,7 @@
   "scripts": {
     "deploy": "cp ~/Dropbox/APIKeys/mail-a-tweet.env . && gcloud app deploy",
     "start": "node server.js",
-    "start-local": "concurrently \"PORT=8081 npm run server\" \"npm run client\"",
+    "start-local": "concurrently \"NODE_ENV=development PORT=8081 npm run server\" \"npm run client\"",
     "client": "cd client && npm start",
     "server": "GOOGLE_APPLICATION_CREDENTIALS=~/Dropbox/APIKeys/mail-a-tweet-cd12a672d500.json GCLOUD_STORAGE_BUCKET=mail-a-tweet GCLOUD_PROJECT=mail-a-tweet node server.js",
     "lint": "eslint .",
@@ -20,6 +20,7 @@
   "author": "David Blackman <david@blackmad.com>",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/datastore": "^1.1.0",
     "@google-cloud/storage": "1.2.1",
     "aws-sdk": "^2.127.0",
     "babel-cli": "6.14.0",

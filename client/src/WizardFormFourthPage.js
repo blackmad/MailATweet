@@ -4,7 +4,7 @@ import Checkout from './Checkout.js'
 import RetryingImage from './RetryingImage.js'
 
 const WizardFormFourthPage = props => {
-  const { handleSubmit, previousPage, postcardPreview, postcardPreviewImagesDone } = props
+  const { handleSubmit, valuesDict, previousPage, postcardPreview, postcardPreviewImagesDone, previewId } = props
 
   if (!postcardPreview) {
     return (
@@ -16,16 +16,6 @@ const WizardFormFourthPage = props => {
     )
   }
 
-  // if (!postcardPreviewImagesDone) {
-  //   return (
-  //     <div className="alert alert-info">
-  //       <strong>Waiting for previews to show up on s3</strong><br/>
-  //       <i className="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-  //       <span className="sr-only">Waiting ...</span>
-  //     </div>
-  //   )
-  // }
-
   if (postcardPreview._response && postcardPreview._response.body && postcardPreview._response.body.error) {
     return (
       <div className="alert alert-danger">
@@ -33,6 +23,12 @@ const WizardFormFourthPage = props => {
       </div>
     )
   }
+
+  console.log('client side values')
+  console.log(valuesDict)
+
+  debugger;
+  valuesDict['id'] = previewId;
 
   return (
     <div>
@@ -48,6 +44,7 @@ const WizardFormFourthPage = props => {
           description={'Lob charges $0.70 to send postcards. $1 is a round number.'}
           amount={1}
           doneCallback={handleSubmit}
+          valuesDict={valuesDict}
         />
       </div>
     </div>

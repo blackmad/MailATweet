@@ -1,4 +1,4 @@
-- figure out why "no auth mechanism defined" on gcloud (no secrets getting copied) OMG / get it deployed
+- get the ID to the final stripe call
 - make sure the prod/test lob flow is actually working
 
 

@@ -7,6 +7,9 @@ const required = value => (value ? undefined : 'Required')
 const maxLength = max => value =>
 value && value.length > max ? `Must be ${max} characters or less` : undefined
 const maxLength300 = maxLength(300)
+const email = value =>
+  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ?
+  'Invalid email address' : undefined
 
 let WizardFormThirdPage = props => {
   const { handleSubmit, previousPage } = props
@@ -325,6 +328,15 @@ let WizardFormThirdPage = props => {
     </div>
 
       <Field
+        label="Email"
+        name="email"
+        component={renderField}
+        validate={[email]}
+        type="text"
+        placeholder="Email (optional, for delivery updates)"
+      />
+
+      <Field
         label="Message"
         name="message"
         type="textarea"
@@ -348,7 +360,7 @@ WizardFormThirdPage = reduxForm({
   form: 'wizard', // <------ same form name
   destroyOnUnmount: false, // <------ preserve form data
   forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
-  enableReinitialize : true // this is needed!!
+
 })(WizardFormThirdPage)
 
 if (process.env.NODE_ENV === 'development') {

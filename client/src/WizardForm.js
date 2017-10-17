@@ -73,7 +73,7 @@ class WizardForm extends Component {
       .then(function(data) {
         console.log({postcardPreview: data})
         console.log('updating postcard preview state')
-        that.setState(updateObject(that.state, {fetchingPostcardPreview: false, postcardPreview: data}))
+        that.setState(updateObject(that.state, {values: values, fetchingPostcardPreview: false, postcardPreview: data}))
       });
     return {fetchingPostcardPreview: true}
   }
@@ -123,8 +123,10 @@ class WizardForm extends Component {
             onSubmit={this.allDone.bind(this)}
             postcardPreview={this.state.postcardPreview}
             postcardPreviewImagesDone={this.state.postcardPreviewImagesDone}
+            valuesDict={this.state.values}
+            previewId={this.state.id}
           />}
-        {done == true && <AllDonePage postcardPreview={this.state.postcardPreview}/>}
+        {done === true && <AllDonePage postcardPreview={this.state.postcardPreview}/>}
       </div>
     )
   }
