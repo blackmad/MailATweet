@@ -3,13 +3,12 @@ import axios from 'axios';
 import StripeCheckout from 'react-stripe-checkout';
 
 const STRIPE_PUBLISHABLE = process.env.NODE_ENV === 'production'
-  ? 'pk_live_MY_PUBLISHABLE_KEY'
+  ? 'pk_live_4HYjC6m0GJMujOiFf71IpuRO'
   : 'pk_test_x3cWWClZyuk8ijM99TYhgrOY';
 
 const PAYMENT_SERVER_URL = process.env.NODE_ENV === 'production'
-  ? 'http://myapidomain.com'
-  : 'http://localhost:8081/api/payAndSendTweet';
-
+  ? '/api/payAndSendTweet'
+  : '/api/payAndSendTweet';
 
 const CURRENCY = 'USD';
 

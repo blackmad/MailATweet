@@ -4,12 +4,13 @@ const app = express()
 const screenshot = require('./screenshot')
 const gcloudStorage = require('./gcloud-storage')
 const path = require('path');
-const secrets = require('load-secrets')
-
 const storageLayer = gcloudStorage
 
+var secrets = require('load-secrets')
+var secrets = {}
 console.log('secrets')
 console.log(secrets)
+
 
 const STRIPE_KEY = process.env.NODE_ENV === 'production'
   ? secrets.STRIPE_PROD_SECRET_KEY
@@ -36,6 +37,12 @@ const FRONTEND_PROD_URLS = [
 const CORS_WHITELIST = process.env.NODE_ENV === 'production'
   ? FRONTEND_PROD_URLS
   : FRONTEND_DEV_URLS;
+
+var bodyParser = require('body-parser')
+app.use(bodyParser.json());       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+}));
 
 // Define request response in root URL (/)
 app.get('/api', function (req, res) {
@@ -125,7 +132,6 @@ app.get('/api/sendTweet', async function (req, res) {
 })
 
 const cors = require('cors');
-const bodyParser = require('body-parser');
 
 const corsOptions = {
   origin: (origin, callback) =>
@@ -143,6 +149,8 @@ app.use(express.static(path.resolve(__dirname, 'client', 'build')));
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
 });
+
+console.log(`node env: ${process.env.NODE_ENV}`)
 
 // Launch listening server on port 8081
 const PORT = process.env.PORT || 8080;
