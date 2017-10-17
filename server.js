@@ -7,10 +7,8 @@ const path = require('path');
 const storageLayer = gcloudStorage
 
 var secrets = require('load-secrets')
-var secrets = {}
 console.log('secrets')
 console.log(secrets)
-
 
 const STRIPE_KEY = process.env.NODE_ENV === 'production'
   ? secrets.STRIPE_PROD_SECRET_KEY

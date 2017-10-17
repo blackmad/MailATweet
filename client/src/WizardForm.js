@@ -4,6 +4,7 @@ import WizardFormFirstPage from './WizardFormFirstPage'
 import WizardFormSecondPage from './WizardFormSecondPage'
 import WizardFormThirdPage from './WizardFormThirdPage'
 import WizardFormFourthPage from './WizardFormFourthPage'
+import AllDonePage from './AllDonePage'
 import { extractTweetId } from './utils'
 
 function updateObject(oldObject, newValues) {
@@ -96,9 +97,13 @@ class WizardForm extends Component {
     this.setState({ page: this.state.page - 1 })
   }
 
+  allDone() {
+    this.setState({ done: true, page: -1 })
+  }
+
   render() {
     // const { onSubmit } = this.props
-    const { page } = this.state
+    const { page, done } = this.state
 
     return (
       <div>
@@ -115,10 +120,11 @@ class WizardForm extends Component {
           />}
         {page === 4 && <WizardFormFourthPage
             previousPage={this.previousPage}
-            onSubmit={this.nextPage}
+            onSubmit={this.allDone.bind(this)}
             postcardPreview={this.state.postcardPreview}
             postcardPreviewImagesDone={this.state.postcardPreviewImagesDone}
           />}
+        {done == true && <AllDonePage postcardPreview={this.state.postcardPreview}/>}
       </div>
     )
   }

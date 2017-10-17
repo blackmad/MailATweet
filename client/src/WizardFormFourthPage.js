@@ -47,6 +47,7 @@ const WizardFormFourthPage = props => {
           name={'Pay for and send this postcard!'}
           description={'Lob charges $0.70 to send postcards. $1 is a round number.'}
           amount={1}
+          doneCallback={handleSubmit}
         />
       </div>
     </div>

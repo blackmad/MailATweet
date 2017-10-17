@@ -1,7 +1,6 @@
-- get stripe working
-- figure out why "no auth mechanism defined" on gcloud (no secrets getting copied)
-- actually send postcards in prod mode
-- thank you page
+- figure out why "no auth mechanism defined" on gcloud (no secrets getting copied) OMG / get it deployed
+- make sure the prod/test lob flow is actually working
+
 
 ---------
 
