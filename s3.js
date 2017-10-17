@@ -1,5 +1,5 @@
 module.exports = {
-  uploadToS3: uploadToS3,
+  uploadFile: uploadToS3,
   makePath: makePath
 }
 

@@ -4,6 +4,8 @@ WORKDIR /app
 COPY package.json /app
 RUN npm install
 COPY . /app
+RUN mkdir ~/.secrets
+COPY mail-a-tweet.env ~/.secrets
 RUN npm run build
-CMD node index.js
-EXPOSE 8081
+CMD node server.js
+EXPOSE 8080

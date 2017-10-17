@@ -60,3 +60,5 @@ typings/
 secrets.json
 
 .DS_Store
+
+*.env

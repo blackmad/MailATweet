@@ -1,0 +1,5 @@
+runtime: custom
+env: flex
+
+env_variables:
+  GCLOUD_STORAGE_BUCKET: mail-a-tweet

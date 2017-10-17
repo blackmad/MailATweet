@@ -2,14 +2,20 @@
 const express = require('express')
 const app = express()
 const screenshot = require('./screenshot')
-const s3 = require('./s3')
+const gcloudStorage = require('./gcloud-storage')
 const path = require('path');
 const secrets = require('load-secrets')
+
+const storageLayer = gcloudStorage
 
 console.log('secrets')
 console.log(secrets)
 
-const stripe = require('stripe')(secrets.STRIPE_TEST_SECRET_KEY)
+const STRIPE_KEY = process.env.NODE_ENV === 'production'
+  ? secrets.STRIPE_PROD_SECRET_KEY
+  : secrets.STRIPE_TEST_SECRET_KEY;
+
+const stripe = require('stripe')(STRIPE_KEY)
 
 // TODO: oh, these should all be POSTs
 // TODO: learn express routes, decompose into multiple files
@@ -20,8 +26,11 @@ const ProdLob = require('lob')(secrets.LOB_PROD_KEY)
 const FRONTEND_DEV_URLS = [ 'http://localhost:3000' ];
 
 const FRONTEND_PROD_URLS = [
-  'https://www.yourdomain.com',
-  'https://yourdomain.com'
+  'https://mail-a-tweet.appspot.com/',
+  'https://mail-a-tweet.blackmad.com/',
+  'https://post-a-tweet.blackmad.com/',
+  'https://mailatweet.blackmad.com/',
+  'https://postatweet.blackmad.com/'
 ];
 
 const CORS_WHITELIST = process.env.NODE_ENV === 'production'
@@ -35,6 +44,8 @@ app.get('/api', function (req, res) {
 
 const postStripeCharge = res => (stripeErr, stripeRes) => {
   if (stripeErr) {
+    console.log('stripe error')
+    console.log(stripeErr)
     res.status(500).send({ error: stripeErr });
   } else {
     res.status(200).send({ success: stripeRes });
@@ -42,21 +53,21 @@ const postStripeCharge = res => (stripeErr, stripeRes) => {
 }
 
 app.post('/api/payAndSendTweet', (req, res) => {
-  stripe.charges.create(req.body, postStripeCharge(req, res));
+  stripe.charges.create(req.body, postStripeCharge(res));
 });
 
 app.get('/api/previewTweet', function (req, res) {
   console.log(req.query.id)
   const tweetId = req.query.id;
   screenshot.screenshotAndResizeTweetIdForLob(tweetId).then((fileBuffer) => {
-    console.log('sending to s3')
-    s3.uploadToS3(fileBuffer, (resp) => res.send(resp))
+    console.log('uploading')
+    storageLayer.uploadFile(fileBuffer, (resp) => res.send(resp))
   })
 })
 
 function getImageFromId (id) {
   // for now, nothing fancy
-  return s3.makePath(id)
+  return storageLayer.makePath(id)
 }
 
 function previewPostcard({frontFilePath, address, message}) {
@@ -134,6 +145,7 @@ app.get('*', (req, res) => {
 });
 
 // Launch listening server on port 8081
-app.listen(8081, function () {
-  console.log('app listening on port 8081!')
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, function () {
+  console.log(`app listening on port ${PORT}!`)
 })
