@@ -3,8 +3,9 @@ const express = require('express')
 const app = express()
 const screenshot = require('./screenshot')
 const gcloudStorage = require('./gcloud-storage')
+const s3Storage = require('./s3-storage')
 const path = require('path');
-const storageLayer = gcloudStorage
+const storageLayer = s3Storage
 const model = require('./model-datastore')
 
 var secrets = require('load-secrets')
