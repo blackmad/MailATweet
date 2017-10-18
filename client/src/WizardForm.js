@@ -103,7 +103,7 @@ class WizardForm extends Component {
 
   render() {
     // const { onSubmit } = this.props
-    const { page, done } = this.state
+    const { page, done } = this.state;
 
     return (
       <div>
@@ -124,7 +124,7 @@ class WizardForm extends Component {
             postcardPreview={this.state.postcardPreview}
             postcardPreviewImagesDone={this.state.postcardPreviewImagesDone}
             valuesDict={this.state.values}
-            previewId={this.state.id}
+            tweetPreview={this.state.tweetPreview}
           />}
         {done === true && <AllDonePage postcardPreview={this.state.postcardPreview}/>}
       </div>

@@ -4,7 +4,7 @@ import Checkout from './Checkout.js'
 import RetryingImage from './RetryingImage.js'
 
 const WizardFormFourthPage = props => {
-  const { handleSubmit, valuesDict, previousPage, postcardPreview, postcardPreviewImagesDone, previewId } = props
+  const { handleSubmit, valuesDict, previousPage, postcardPreview, postcardPreviewImagesDone, tweetPreview } = props
 
   if (!postcardPreview) {
     return (
@@ -27,8 +27,8 @@ const WizardFormFourthPage = props => {
   console.log('client side values')
   console.log(valuesDict)
 
+  valuesDict['id'] = tweetPreview.id
   debugger;
-  valuesDict['id'] = previewId;
 
   return (
     <div>

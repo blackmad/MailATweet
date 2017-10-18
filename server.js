@@ -74,7 +74,7 @@ app.post('/api/payAndSendTweet', (req, res) => {
       currency: req.body.currency,
       source: req.body.source
     }
-  const lobData = extractLobParams(req);
+  const lobData = extractLobParams(req.body);
   stripe.charges.create(data, postStripeCharge(res, lobData));
 });
 
@@ -110,23 +110,23 @@ function sendPostcard({frontFilePath, address, message}) {
   })
 }
 
-function extractLobParams(req) {
-  const s3path = getImageFromId(req.query.id)
+function extractLobParams(paramDict) {
+  const s3path = getImageFromId(paramDict.id)
   console.log(s3path)
 
   const data = {
     frontFilePath: s3path,
-    email: req.query.email,
+    email: paramDict.email,
     address: {
-      name: req.query.name,
-      address_line1: req.query.address_line1,
-      address_line2: req.query.address_line2,
-      address_city: req.query.address_city,
-      address_state: req.query.address_state,
-      address_zip: req.query.address_zip,
-      address_country: req.query.address_country
+      name: paramDict.name,
+      address_line1: paramDict.address_line1,
+      address_line2: paramDict.address_line2,
+      address_city: paramDict.address_city,
+      address_state: paramDict.address_state,
+      address_zip: paramDict.address_zip,
+      address_country: paramDict.address_country
     },
-    message: req.query.message || 'Tweet for you.'
+    message: paramDict.message || 'Tweet for you.'
   }
 
   return data;
@@ -146,7 +146,7 @@ console.log(req.query)
     sendFunc = previewPostcard;
   }
 
-  const data = extractLobParams(req);
+  const data = extractLobParams(req.query);
   await sendFunc(data).then(function (resp) {
     console.log(resp['id'])
     // getModel().create(data, (err, savedData) => {

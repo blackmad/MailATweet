@@ -1,6 +1,8 @@
-- get the ID to the final stripe call
+
 - make sure the prod/test lob flow is actually working
 
+- clean up this disgusting data model
+- webhooks for postcard status
 
 ---------
 
