@@ -28,7 +28,6 @@ const WizardFormFourthPage = props => {
   console.log(valuesDict)
 
   valuesDict['id'] = tweetPreview.id
-  debugger;
 
   return (
     <div>
