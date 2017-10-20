@@ -14,6 +14,29 @@ const PAYMENT_SERVER_URL = process.env.NODE_ENV === 'production'
 const fromEuroToCent = amount => amount * 100;
 const CURRENCY = 'USD';
 
+// StripeCheckout.prototype.renderDefaultStripeButton = function() {
+//     return (
+//       <form className="monkeyPatch">
+//         <div>
+//           <button
+//             {...{
+//               [this.props.triggerEvent]: this.onClick,
+//             }}
+//             className={this.props.className}
+//             onMouseDown={this.handleOnMouseDown}
+//             onFocus={this.handleOnMouseDown}
+//             onMouseUp={this.handleOnMouseUp}
+//             onMouseOut={this.handleOnMouseUp}
+//             onBlur={this.handleOnMouseUp}
+//           ><span>
+//             {this.props.label}
+//             </span>
+//           </button>
+//         </div>
+//       </form>
+//     );
+//   }
+
 const Checkout = ({ name, description, amount, valuesDict, doneCallback, errorCallback}) => {
   const successPayment = data => {
     doneCallback();

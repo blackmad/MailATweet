@@ -1,8 +1,6 @@
-- add google maps
-- add ability to go back from preiview
 - fix dots in email
 - why is johanna getting a white screen / no message error?
-
+- if address is not good enough, go back
 
 - clean up this disgusting data model
 - webhooks for postcard status

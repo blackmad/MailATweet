@@ -30,28 +30,28 @@ let WizardFormThirdPage = props => {
   };
 
   const  onSuggestSelect = (displatch) => (suggest) => {
-    const geoDestination = suggest.gmaps;
-    const address = {
-      street: getAddressFieldFromGeoDestination('route', geoDestination),
-      streetNumber: getAddressFieldFromGeoDestination('street_number', geoDestination),
-      subpremise: getAddressFieldFromGeoDestination('subpremise', geoDestination),
-      city: getAddressFieldFromGeoDestination('locality', geoDestination) ||
-        getAddressFieldFromGeoDestination('postal_town', geoDestination) ||
-        getAddressFieldFromGeoDestination('sublocality_level_1', geoDestination),
-      state: getShortAddressFieldFromGeoDestination('administrative_area_level_1', geoDestination),
-      country: getShortAddressFieldFromGeoDestination('country', geoDestination),
-      postalCode: getAddressFieldFromGeoDestination('postal_code', geoDestination)
+    if (suggest && suggest.gmaps) {
+      const geoDestination = suggest.gmaps;
+      const address = {
+        street: getAddressFieldFromGeoDestination('route', geoDestination),
+        streetNumber: getAddressFieldFromGeoDestination('street_number', geoDestination),
+        subpremise: getAddressFieldFromGeoDestination('subpremise', geoDestination),
+        city: getAddressFieldFromGeoDestination('locality', geoDestination) ||
+          getAddressFieldFromGeoDestination('postal_town', geoDestination) ||
+          getAddressFieldFromGeoDestination('sublocality_level_1', geoDestination),
+        state: getShortAddressFieldFromGeoDestination('administrative_area_level_1', geoDestination),
+        country: getShortAddressFieldFromGeoDestination('country', geoDestination),
+        postalCode: getAddressFieldFromGeoDestination('postal_code', geoDestination)
+      }
+      console.log(suggest);
+      console.log(address);
+
+      dispatch(change('wizard', 'address_line1', `${address.streetNumber} ${address.street}`));
+      dispatch(change('wizard', 'address_city', address.city));
+      dispatch(change('wizard', 'address_state', address.state));
+      dispatch(change('wizard', 'address_zip', address.postalCode));
+      dispatch(change('wizard', 'address_country', address.country));
     }
-    console.log(suggest);
-    console.log(address);
-
-
-    dispatch(change('wizard', 'address_line1', `${address.streetNumber} ${address.street}`));
-    dispatch(change('wizard', 'address_city', address.city));
-    dispatch(change('wizard', 'address_state', address.state));
-    dispatch(change('wizard', 'address_zip', address.postalCode));
-    dispatch(change('wizard', 'address_country', address.country));
-
   }
 
   function HiddenField() {
@@ -101,6 +101,7 @@ let WizardFormThirdPage = props => {
           label="Address Line 1"
           name="address_line1"
           component={renderField}
+          validate={[required]}
           type="text"
           placeholder="Address Line 1"
         />

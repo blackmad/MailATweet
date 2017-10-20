@@ -18,8 +18,17 @@ const WizardFormFourthPage = props => {
 
   if (postcardPreview._response && postcardPreview._response.body && postcardPreview._response.body.error) {
     return (
-      <div className="alert alert-danger">
-        <strong>Oh no, error!</strong> {postcardPreview.error.message}
+      <div>
+        <div className="alert alert-danger">
+          <strong>Oh no, error!</strong> {postcardPreview._response.body.error.message}
+        </div>
+        <form>
+          <div>
+            <button type="button" className="previous" onClick={previousPage}>
+              Edit the postcard
+            </button>
+          </div>
+        </form>
       </div>
     )
   }
@@ -45,6 +54,16 @@ const WizardFormFourthPage = props => {
           doneCallback={handleSubmit}
           valuesDict={valuesDict}
         />
+      </div>
+      <div>
+        <h2>Otherwise ...</h2>
+        <form>
+          <div>
+            <button type="button" className="previous" onClick={previousPage}>
+              Keep editing
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   )

@@ -7,7 +7,6 @@ import TweetEmbed from 'react-tweet-embed'
 
 const WizardFormSecondPage = props => {
   const { handleSubmit, previousPage, tweetUrlOrId } = props
-  console.log(extractTweetId);
   const tweetId = extractTweetId(tweetUrlOrId);
 
   return (

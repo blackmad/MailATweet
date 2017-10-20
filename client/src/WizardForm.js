@@ -21,7 +21,6 @@ class WizardForm extends Component {
     this.previousPage = this.previousPage.bind(this)
     this.state = {
       page: 1,
-      needPostcardPreview: true,
       postcardPreview: null,
       postcardPreviewImagesDone: false,
       numPostcardPreviewTries: 0
@@ -49,7 +48,7 @@ class WizardForm extends Component {
         }
         that.setState(toReturn);
       });
-    return {fetchingTweetPreview: true, needPostcardPreview: true}
+    return {fetchingTweetPreview: true}
   }
 
   // // I'm sorry for using "that", I promise to fix
@@ -101,6 +100,10 @@ class WizardForm extends Component {
     this.setState({ done: true, page: -1 })
   }
 
+  keepEditing() {
+    this.setState({ postcardPreview: null, page: this.state.page - 1 })
+  }
+
   render() {
     // const { onSubmit } = this.props
     const { page, done } = this.state;
@@ -119,7 +122,7 @@ class WizardForm extends Component {
             onSubmit={this.nextPage}
           />}
         {page === 4 && <WizardFormFourthPage
-            previousPage={this.previousPage}
+            previousPage={this.keepEditing.bind(this)}
             onSubmit={this.allDone.bind(this)}
             postcardPreview={this.state.postcardPreview}
             postcardPreviewImagesDone={this.state.postcardPreviewImagesDone}
