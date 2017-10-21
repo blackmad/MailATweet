@@ -6,6 +6,7 @@ import WizardFormThirdPage from './WizardFormThirdPage'
 import WizardFormFourthPage from './WizardFormFourthPage'
 import AllDonePage from './AllDonePage'
 import { extractTweetId } from './utils'
+import ReactGA from './ReactGA'
 
 function updateObject(oldObject, newValues) {
     // Encapsulate the idea of passing a new object as the first parameter
@@ -35,6 +36,9 @@ class WizardForm extends Component {
     fetch(url)
       .then(function(response) {
         if (response.status >= 400) {
+          ReactGA.exception({
+            description: 'Bad response from previewTweet'
+          });
           throw new Error("Bad response from server");
         }
         return response.json();
@@ -42,6 +46,7 @@ class WizardForm extends Component {
       .then(function(data) {
         console.log({tweetPreview: data})
         if (data.error) {
+          ReactGA.exception({description: data.error.message, fatal: true });
           that.setState({fatalError: data.error.message, page: -1})
         } else {
           var toReturn = {fetchingTweetPreview: false, tweetPreview: data};
@@ -111,6 +116,19 @@ class WizardForm extends Component {
   render() {
     // const { onSubmit } = this.props
     const { page, done, fatalError } = this.state;
+
+    if (page > 0) {
+      ReactGA.event({
+        category: 'Wizard',
+        action: 'Reached Page',
+        value: page
+      });
+    } else if (done) {
+       ReactGA.event({
+        category: 'Wizard',
+        action: 'Sent Postcard'
+      });
+    }
 
     return (
       <div>

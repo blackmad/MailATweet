@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios';
 import StripeCheckout from 'react-stripe-checkout';
 import { connect } from 'react-redux';
+import ReactGA from './ReactGA'
 
 const STRIPE_PUBLISHABLE = process.env.NODE_ENV === 'development'
   ? 'pk_test_x3cWWClZyuk8ijM99TYhgrOY'
@@ -43,6 +44,7 @@ const Checkout = ({ name, description, amount, valuesDict, doneCallback, errorCa
   };
 
   const errorPayment = data => {
+    ReactGA.exception({description: JSON.stringify(data) });
     alert('Payment Error - Sorry, I haven\'t implemented any error handling :-/');
     // errorCallback();
   };
