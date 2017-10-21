@@ -8,6 +8,10 @@ import splashImage from'./splashImage.png';
 
 const required = value => (value ? undefined : 'Required')
 const mustBeTweet = value => value && extractTweetId(value) === null ? "Invalid input" : undefined
+const isInteger = value =>
+  value && !/^[0-9]+$/i.test(value)
+    ? 'Invalid number'
+    : undefined
 
 let WizardFormFirstPage = props => {
   const { handleSubmit } = props
@@ -58,6 +62,13 @@ var splashTextStyle = {
           label="Tweet URL or ID"
           validate={[required, mustBeTweet]}
         />
+        <Field
+          name="maxPreviousTweets"
+          type="text"
+          component={renderField}
+          label="Max previous tweets (if reply)"
+          validate={[isInteger]}
+        />
         <div>
           <button type="submit" className="next">
             Next
@@ -75,14 +86,16 @@ WizardFormFirstPage = reduxForm({
   enableReinitialize : true // this is needed!!
 })(WizardFormFirstPage)
 
-if (process.env.NODE_ENV === 'development') {
-  WizardFormFirstPage = connect(
-    state => ({
-      initialValues:  {
-        tweetUrlOrId: 'https://twitter.com/Bodegacats_/status/914092267983589376'
-      }
-    })
-  )(WizardFormFirstPage);
+var initialValues = {
+  maxPreviousTweets: 3
 }
+
+if (process.env.NODE_ENV === 'development') {
+    initialValues['tweetUrlOrId'] = 'https://twitter.com/Bodegacats_/status/914092267983589376';
+}
+
+WizardFormFirstPage = connect(
+  state => ({ initialValues })
+)(WizardFormFirstPage);
 
 export default WizardFormFirstPage

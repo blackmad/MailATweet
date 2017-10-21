@@ -7,17 +7,38 @@ const tmp = require('tmp')
 const sharp = require('sharp')
 
 // give it a tweet url and it returns the tweet detail frame rendered
-async function screenshotTweet (tweetUrl) {
+async function screenshotTweet ({tweetUrl, maxPreviousTweets, errorHandler}) {
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']})
   const page = await browser.newPage()
   await page.setViewport({width: 1280, height: 2000, deviceScaleFactor: 2})
   await page.emulateMedia('screen')
   await page.goto(tweetUrl, {waitUntil: 'networkidle'})
-  const clip = await page.evaluate(() => {
+
+  if (maxPreviousTweets == null) {
+    maxPreviousTweets = 5;
+  }
+
+  page.on('error', (e) => {
+    console.log('error from chrome');
+    errorHandler(e.message);
+  })
+
+  console.log('max prev tweets ' + maxPreviousTweets)
+
+  const clip = await page.evaluate(({maxPreviousTweets}) => {
     // in .permalink remove every node after .permalink-tweet-container
     $('.permalink-tweet-container').nextAll('div').remove()
     $('.permalink').nextAll('div').remove()
     $('.PermalinkProfile-dismiss').remove()
+
+    // if there are too many tweets before this, kill them
+    let priorTweets = $('.ThreadedConversation-tweet');
+    if (priorTweets.length > maxPreviousTweets) {
+      for (let i = 0; i < priorTweets.length - maxPreviousTweets; i++) {
+        console.log('removing prior tweet: ' + i)
+        $(priorTweets[i]).remove();
+      }
+    }
 
     // need to fix the rounded corners too
     $('.permalink').css('border', '0px')
@@ -29,6 +50,8 @@ async function screenshotTweet (tweetUrl) {
       'x': $('.permalink').offset()['left'],
       'y': $('.permalink').offset()['top']
     }
+  }, {
+    maxPreviousTweets
   })
 
   var tmpFileName = tmp.tmpNameSync() + '.png'
@@ -84,8 +107,14 @@ function resizeForPostcard (imagePath) {
     })
 }
 
-async function screenshotAndResizeTweetIdForLob (tweetId) {
-  return screenshotTweet(`https://twitter.com/Bodegacats_/status/${tweetId}`).then((fileName) => {
+async function screenshotAndResizeTweetIdForLob ({tweetId, maxPreviousTweets, errorHandler}) {
+  console.log('got maxPreviousTweets ' + maxPreviousTweets)
+  // twitter doesn't care what user is in this path
+  return screenshotTweet({
+    tweetUrl: `https://twitter.com/Bodegacats_/status/${tweetId}`,
+    maxPreviousTweets,
+    errorHandler
+  }).then((fileName) => {
     return resizeForPostcard(fileName)
   })
 }

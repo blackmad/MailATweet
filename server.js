@@ -82,7 +82,21 @@ app.post('/api/payAndSendTweet', (req, res) => {
 app.get('/api/previewTweet', function (req, res) {
   console.log(req.query.id)
   const tweetId = req.query.id;
-  screenshot.screenshotAndResizeTweetIdForLob(tweetId).then((fileBuffer) => {
+  const maxPreviousTweets = req.query.maxPreviousTweets;
+  console.log('got maxPreviousTweets ' + maxPreviousTweets)
+  const errorHandler = (errorMessage) => {
+    res.send({
+      error: {
+        message: errorMessage
+      }
+    })
+  }
+
+  screenshot.screenshotAndResizeTweetIdForLob({
+    tweetId,
+    errorHandler,
+    maxPreviousTweets: maxPreviousTweets
+  }).then((fileBuffer) => {
     console.log('uploading')
     storageLayer.uploadFile(fileBuffer, (resp) => res.send(resp))
   })
