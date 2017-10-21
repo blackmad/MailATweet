@@ -99,6 +99,9 @@ app.get('/api/previewTweet', function (req, res) {
   }).then((fileBuffer) => {
     console.log('uploading')
     storageLayer.uploadFile(fileBuffer, (resp) => res.send(resp))
+  }).catch((error) => {
+    console.log(error);
+    errorHandler(error.message);
   })
 })
 

@@ -1,6 +1,7 @@
-- fix dots in email
-- why is johanna getting a white screen / no message error?
-- if address is not good enough, go back
+- hook up the max # tweets
+- kill email
+- deal with chrome errors
+- see if lots of replies is fixed in chrome docker https://twitter.com/WynneOwner/status/862875812743270400
 
 - clean up this disgusting data model
 - webhooks for postcard status

@@ -29,7 +29,7 @@ class WizardForm extends Component {
 
   // I think this is why I should use redux and ... bleh
   fetchTweetPreview(values) {
-    const url = '/api/previewTweet?id=' + extractTweetId(values.tweetUrlOrId)
+    const url = `/api/previewTweet?id=${extractTweetId(values.tweetUrlOrId)}&maxPreviousTweets=${values.maxPreviousTweets}`
     console.log(url)
     const that = this;
     fetch(url)
@@ -41,12 +41,16 @@ class WizardForm extends Component {
       })
       .then(function(data) {
         console.log({tweetPreview: data})
-        var toReturn = {fetchingTweetPreview: false, tweetPreview: data};
-        if (that.state.values.address_line1) {
-          console.log(data.id)
-          toReturn = updateObject(toReturn, that.fetchPostcard({values: that.state.values, isTest: true, id: data.id}))
+        if (data.error) {
+          that.setState({fatalError: data.error.message, page: -1})
+        } else {
+          var toReturn = {fetchingTweetPreview: false, tweetPreview: data};
+          if (that.state.values.address_line1) {
+            console.log(data.id)
+            toReturn = updateObject(toReturn, that.fetchPostcard({values: that.state.values, isTest: true, id: data.id}))
+          }
+          that.setState(toReturn);
         }
-        that.setState(toReturn);
       });
     return {fetchingTweetPreview: true}
   }
@@ -106,10 +110,17 @@ class WizardForm extends Component {
 
   render() {
     // const { onSubmit } = this.props
-    const { page, done } = this.state;
+    const { page, done, fatalError } = this.state;
 
     return (
       <div>
+        {fatalError &&
+           <div className="alert alert-danger">
+           <h2>Sorry!</h2>
+            There was a fatal error rendering the tweet. Please try again later. <p/>
+            <strong>{fatalError}</strong>
+          </div>
+        }
         {page === 1 && <WizardFormFirstPage onSubmit={this.nextPage} />}
         {page === 2 &&
           <WizardFormSecondPage
