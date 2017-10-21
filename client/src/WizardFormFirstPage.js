@@ -87,7 +87,7 @@ WizardFormFirstPage = reduxForm({
 })(WizardFormFirstPage)
 
 var initialValues = {
-  maxPreviousTweets: 3
+  maxPreviousTweets: 1
 }
 
 if (process.env.NODE_ENV === 'development') {

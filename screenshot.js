@@ -15,7 +15,7 @@ async function screenshotTweet ({tweetUrl, maxPreviousTweets, errorHandler}) {
   await page.goto(tweetUrl, {waitUntil: 'networkidle'})
 
   if (maxPreviousTweets == null) {
-    maxPreviousTweets = 5;
+    maxPreviousTweets = 1;
   }
 
   page.on('error', (e) => {
