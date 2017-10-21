@@ -27,6 +27,56 @@ body {
   padding: 0rem 7rem;
 }
 
+.splashWrapper {
+  background-color: #52c4c5;
+  padding: 1rem;
+  margin-bottom: 3rem;
+  border-radius: 8px;
+}
+
+.splash {
+  background-color: #52c4c5;
+  background-image: url("./splashImage.png");
+  width: 100%;
+  height: 14rem;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: right;
+}
+
+.splashText {
+  color: white;
+  font-size: 5rem;
+  line-height: 5rem;
+  width: 60%;
+  float: left;
+  margin-left: 1rem;
+  margin-top: 1rem;
+}
+
+@media only screen and (max-width: 500px) {
+  .splashText {
+    color: white;
+    float: none;
+    font-size: 3rem;
+    line-height: 3rem;
+    text-align: middle;
+    width: 100%;
+    margin-top: 0.25rem;
+    margin-bottom: 0.75rem;
+    margin-left: 0rem;
+  }
+
+  .ps-disclaimer {
+    padding: 0rem 1.5rem;
+  }
+
+  .jumbotron {
+    border-bottom: none !important;
+  }
+}
+
+
 
 /**
  * The geosuggest module

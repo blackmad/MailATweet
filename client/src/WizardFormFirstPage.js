@@ -4,7 +4,7 @@ import { Field, reduxForm } from 'redux-form'
 import { renderField } from './renderField'
 import { extractTweetId } from './utils.js'
 
-import splashImage from'./splashImage.png';
+import './index.css';
 
 const required = value => (value ? undefined : 'Required')
 const mustBeTweet = value => value && extractTweetId(value) === null ? "Invalid input" : undefined
@@ -16,42 +16,15 @@ const isInteger = value =>
 let WizardFormFirstPage = props => {
   const { handleSubmit } = props
 
-var splashStyleWrapper = {
-  backgroundColor: '#52c4c5',
-  padding: '1rem',
-  marginBottom: '3rem',
-  borderRadius: '8px'
-}
-
-var splashStyle = {
-  backgroundColor: '#52c4c5',
-  backgroundImage: `url(${splashImage})`,
-  width: '100%',
-  height: '14rem',
-  backgroundSize: 'contain',
-  backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'right'
-};
-
-var splashTextStyle = {
-  color: 'white',
-  fontSize: '5rem',
-  lineHeight: '5rem',
-  width: '60%',
-  float: 'left',
-  marginLeft: '1rem',
-  marginTop: '1rem'
-}
-
   return (
     <div>
-      <div style={splashStyleWrapper}>
-        <div style={splashTextStyle}>
+      <div className="splashWrapper">
+        <div className="splashText">
           <span className="align-middle">
             1 Dollar =
           </span>
         </div>
-        <div style={splashStyle}>
+        <div className="splash">
         </div>
       </div>
       <form onSubmit={handleSubmit}>
