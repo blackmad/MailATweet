@@ -1,6 +1,3 @@
-- hook up the max # tweets
-- kill email
-- deal with chrome errors
 - see if lots of replies is fixed in chrome docker https://twitter.com/WynneOwner/status/862875812743270400
 
 - clean up this disgusting data model

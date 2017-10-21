@@ -58,6 +58,15 @@ let WizardFormThirdPage = props => {
     return null;
   }
 
+          // <Field
+        //   label="Email"
+        //   name="email"
+        //   component={renderField}
+        //   validate={[email]}
+        //   type="text"
+        //   placeholder="Email (optional, for delivery updates)"
+        // />
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -84,17 +93,8 @@ let WizardFormThirdPage = props => {
           validate={[maxLength300]}
         />
 
-        <Field
-          label="Email"
-          name="email"
-          component={renderField}
-          validate={[email]}
-          type="text"
-          placeholder="Email (optional, for delivery updates)"
-        />
-
     <div>
-    <h3>Customize Address</h3>
+    <h3>Address Details</h3>
     </div>
 
         <Field
