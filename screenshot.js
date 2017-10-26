@@ -8,6 +8,7 @@ const sharp = require('sharp')
 
 // give it a tweet url and it returns the tweet detail frame rendered
 async function screenshotTweet ({tweetUrl, maxPreviousTweets, errorHandler}) {
+  console.log(`loading: ${tweetUrl}`)
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']})
   const page = await browser.newPage()
   await page.setViewport({width: 1280, height: 2000, deviceScaleFactor: 2})
@@ -77,15 +78,18 @@ function resizeForPostcard (imagePath) {
   return imageSharp
     .metadata()
     .then(info => {
+      console.log(`height: ${info['height']} - width: ${info['width']}`)
       if (info['height'] > info['width']) {
         console.log('h > w - rotating')
         imageSharp = imageSharp.rotate(270)
       }
 
       // var tmpFileName = tmp.tmpNameSync() + '.png';
+      console.log('max: 1875 x 1275')
 
+      // safe area of 5.875 x 3.875 @ 300dpi is roughly this
       return imageSharp
-        .resize(1875, 1275)
+        .resize(1762, 1162)
         .max()
         .toBuffer()
         .then(outputBuffer => {
