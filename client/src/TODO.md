@@ -1,3 +1,7 @@
+- get instagram wired up
+- test mobile vs web card version
+
+
 - see if lots of replies is fixed in chrome docker https://twitter.com/WynneOwner/status/862875812743270400
 
 - clean up this disgusting data model

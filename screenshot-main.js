@@ -13,10 +13,22 @@ function extractTweetId(string) {
 var myArgs = process.argv.slice(2);
 console.log(myArgs[0])
 console.log(extractTweetId(myArgs[0]))
-screenshot.screenshotAndResizeTweetIdForLob({
-  tweetId: extractTweetId(myArgs[0]),
-  maxPreviousTweets: 2
-}).then((fileBuffer) => {
+
+var future = null;
+
+if (myArgs[0].includes('twitter.com')) {
+  future = screenshot.screenshotAndResizeTweetIdForLob({
+    tweetId: extractTweetId(myArgs[0]),
+    maxPreviousTweets: 2
+  })
+} else {
+  future = screenshot.screenshotAndResizeInstagramForLob({
+    instagramUrl: myArgs[0],
+    maxPreviousTweets: 2
+  })
+}
+
+future.then((fileBuffer) => {
   var fs = require('fs');
   var wstream = fs.createWriteStream(tmpFileName);
 

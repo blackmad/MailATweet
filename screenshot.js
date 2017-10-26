@@ -1,10 +1,68 @@
 module.exports = {
-  screenshotAndResizeTweetIdForLob: screenshotAndResizeTweetIdForLob
+  screenshotAndResizeTweetIdForLob: screenshotAndResizeTweetIdForLob,
+  screenshotAndResizeInstagramForLob: screenshotAndResizeInstagramForLob
+
 }
 
 const puppeteer = require('puppeteer')
 const tmp = require('tmp')
 const sharp = require('sharp')
+
+// give it a tweet url and it returns the tweet detail frame rendered
+async function screenshotInstagram ({instagramUrl, errorHandler}) {
+  console.log(`loading: ${instagramUrl}`)
+  const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']})
+  const page = await browser.newPage()
+  await page.setViewport({width: 1280, height: 2000, deviceScaleFactor: 2})
+  await page.emulateMedia('screen')
+  await page.goto(instagramUrl, {waitUntil: 'networkidle'})
+
+  page.on('error', (e) => {
+    console.log('error from chrome');
+    errorHandler(e.message);
+  })
+
+  const clip = await page.evaluate(() => {
+      // // Anonymous "self-invoking" function
+      // (function() {
+      //     // Load the script
+      //     // This is a race, need to fix
+      //     var script = document.createElement("SCRIPT");
+      //     script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
+      //     script.type = 'text/javascript';
+      //     script.onload = function() {
+      //       document.getElementsByTagName("head")[0]
+      //         var $ = window.jQuery;
+      //         // Use $ here...
+      //         $('nav').remove();
+      //         $('footer').remove();
+      //     };
+      //     document.getElementsByTagName("head")[0].appendChild(script);
+      // })();
+
+      var elem = document.getElementsByTagName('article')[0];
+      // elem.style.border = 'none';
+      return {
+        'width': elem.scrollWidth + 2,
+        'height': elem.scrollHeight + 2,
+        'x': elem.getBoundingClientRect().left,
+        'y': elem.getBoundingClientRect().top
+      }
+  })
+
+  var tmpFileName = tmp.tmpNameSync() + '.png'
+
+  await page.screenshot({
+    path: tmpFileName,
+    clip: clip
+  })
+
+  await browser.close()
+
+  console.log('got the screenshot ' + tmpFileName)
+
+  return tmpFileName
+};
 
 // give it a tweet url and it returns the tweet detail frame rendered
 async function screenshotTweet ({tweetUrl, maxPreviousTweets, errorHandler}) {
@@ -117,6 +175,15 @@ async function screenshotAndResizeTweetIdForLob ({tweetId, maxPreviousTweets, er
   return screenshotTweet({
     tweetUrl: `https://twitter.com/Bodegacats_/status/${tweetId}`,
     maxPreviousTweets,
+    errorHandler
+  }).then((fileName) => {
+    return resizeForPostcard(fileName)
+  })
+}
+
+async function screenshotAndResizeInstagramForLob ({instagramUrl, errorHandler}) {
+  return screenshotInstagram({
+    instagramUrl: instagramUrl,
     errorHandler
   }).then((fileName) => {
     return resizeForPostcard(fileName)
