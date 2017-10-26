@@ -110,22 +110,22 @@ function getImageFromId (id) {
   return storageLayer.makePath(id)
 }
 
+function makeLobDict({frontFilePath, address, message}) {
+  return {
+      description: 'My First Postcard',
+      to: address,
+      front: frontFilePath,
+      back: 'http://serverlessimageresize-imagebucket-bu77xeh018n8.s3.amazonaws.com/postcard_4x6_back.html',
+      'merge_variables[message]': message
+    }
+  }
+
 function previewPostcard({frontFilePath, address, message}) {
-  return TestLob.postcards.create({
-    description: 'My First Postcard',
-    to: address,
-    front: frontFilePath,
-    message: message
-  })
+  return TestLob.postcards.create(makeLobDict({frontFilePath, address, message}))
 }
 
 function sendPostcard({frontFilePath, address, message}) {
-  return ProdLob.postcards.create({
-    description: 'My First Postcard',
-    to: address,
-    front: frontFilePath,
-    message: message
-  })
+  return ProdLob.postcards.create(makeLobDict({frontFilePath, address, message}))
 }
 
 function extractLobParams(paramDict) {
