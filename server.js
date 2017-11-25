@@ -144,7 +144,7 @@ function extractLobParams(paramDict) {
       address_zip: paramDict.address_zip,
       address_country: paramDict.address_country
     },
-    message: paramDict.message || 'Tweet for you.'
+    message: paramDict.message.replace('\n', '<br/>') || 'Tweet for you.'
   }
 
   return data;

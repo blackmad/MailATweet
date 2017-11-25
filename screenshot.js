@@ -89,6 +89,7 @@ async function screenshotTweet ({tweetUrl, maxPreviousTweets, errorHandler}) {
     $('.permalink-tweet-container').nextAll('div').remove()
     $('.permalink').nextAll('div').remove()
     $('.PermalinkProfile-dismiss').remove()
+    $('.follow-bar').remove()
 
     // if there are too many tweets before this, kill them
     let priorTweets = $('.ThreadedConversation-tweet');
