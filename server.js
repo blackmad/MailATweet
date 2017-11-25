@@ -132,6 +132,9 @@ function extractLobParams(paramDict) {
   const s3path = getImageFromId(paramDict.id)
   console.log(s3path)
 
+  var message = paramDict.message|| 'Tweet for you.';
+  message = message.replace(/\n/g,"<br/>");
+
   const data = {
     frontFilePath: s3path,
     email: paramDict.email,
@@ -144,7 +147,7 @@ function extractLobParams(paramDict) {
       address_zip: paramDict.address_zip,
       address_country: paramDict.address_country
     },
-    message: paramDict.message.replace('\n', '<br/>') || 'Tweet for you.'
+    message: message
   }
 
   return data;
