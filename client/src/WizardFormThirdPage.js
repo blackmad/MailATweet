@@ -1,5 +1,5 @@
 import React from 'react'
-import { Field, Fields, reduxForm, change } from 'redux-form'
+import { Field, reduxForm, change } from 'redux-form'
 import { renderField, renderTextArea} from './renderField'
 import { connect } from 'react-redux';
 import Geosuggest from 'react-geosuggest';
@@ -9,10 +9,9 @@ const required = value => (value ? undefined : 'Required')
 const maxLength = max => value =>
 value && value.length > max ? `Must be ${max} characters or less` : undefined
 const maxLength300 = maxLength(300)
-const email = value =>
-  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ?
-  'Invalid email address' : undefined
-
+// const email = value =>
+//   value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ?
+//   'Invalid email address' : undefined
 
 let WizardFormThirdPage = props => {
   const { handleSubmit, previousPage, dispatch } = props
@@ -54,9 +53,7 @@ let WizardFormThirdPage = props => {
     }
   }
 
-  function HiddenField() {
-    return null;
-  }
+
 
           // <Field
         //   label="Email"

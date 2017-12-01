@@ -1,32 +1,22 @@
+import { extractIdFromUrlOrId } from './client/src/utils'
 const screenshot = require('./screenshot')
 const tmp = require('tmp');
-var tmpFileName = tmp.tmpNameSync() + '.png';
 
-function extractTweetId(string) {
-  if (string === null) { return null; }
-  if (string.match(/^[0-9]+$/)) { return string; }
-  const testUrl = string.match(/^((?:http:\/\/)?|(?:https:\/\/)?)?(?:www\.)?(?:mobile\.)?twitter\.com\/\w+\/status\/(\d+)(?:\?.*)?$/i);
-  if (testUrl) { return testUrl[2]; }
-  return null;
-}
+var tmpFileName = tmp.tmpNameSync() + '.png';
 
 var myArgs = process.argv.slice(2);
 console.log(myArgs[0])
-console.log(extractTweetId(myArgs[0]))
+var socialId = extractIdFromUrlOrId(myArgs[0]);
+console.log(socialId);
 
 var future = null;
 
-if (myArgs[0].includes('twitter.com')) {
-  future = screenshot.screenshotAndResizeTweetIdForLob({
-    tweetId: extractTweetId(myArgs[0]),
-    maxPreviousTweets: 2
-  })
-} else {
-  future = screenshot.screenshotAndResizeInstagramForLob({
-    instagramUrl: myArgs[0],
-    maxPreviousTweets: 2
-  })
-}
+future = screenshot.screenshotAndResizeSocialIdForLob({
+  id: socialId.getId(),
+  namespace: socialId.getNamespace(),
+  url: socialId.getUrl(),
+  maxPreviousTweets: 2
+})
 
 future.then((fileBuffer) => {
   var fs = require('fs');

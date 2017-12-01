@@ -8,7 +8,7 @@ export default props => {
       <div>
         <h1>Thanks!</h1>
         <h3>Your postcard should arrive at its destination in a week or two</h3>
-        <img src={postcardPreview.thumbnails[0].medium}/>
+        <img alt="postcard preview" src={postcardPreview.thumbnails[0].medium}/>
       </div>
       <div>
         <a className="twitter-share-button"

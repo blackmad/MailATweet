@@ -2,12 +2,11 @@ import React from 'react'
 import { reduxForm } from 'redux-form'
 import { formValueSelector } from 'redux-form';  // ES6
 import { connect } from 'react-redux'
-import { extractTweetId } from './utils'
-import TweetEmbed from 'react-tweet-embed'
+import { extractIdFromUrlOrId } from './utils'
 
 const WizardFormSecondPage = props => {
   const { handleSubmit, previousPage, tweetUrlOrId } = props
-  const tweetId = extractTweetId(tweetUrlOrId);
+  const socialId = extractIdFromUrlOrId(tweetUrlOrId);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -22,7 +21,7 @@ const WizardFormSecondPage = props => {
           Yes!
         </button>
       </div>
-      <TweetEmbed id={tweetId} />
+      {socialId.renderPreview()}
     </form>
   )
 }

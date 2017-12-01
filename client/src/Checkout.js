@@ -1,7 +1,6 @@
 import React from 'react'
 import axios from 'axios';
 import StripeCheckout from 'react-stripe-checkout';
-import { connect } from 'react-redux';
 import ReactGA from './ReactGA'
 
 const STRIPE_PUBLISHABLE = process.env.NODE_ENV === 'development'

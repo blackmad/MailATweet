@@ -5,7 +5,7 @@ import WizardFormSecondPage from './WizardFormSecondPage'
 import WizardFormThirdPage from './WizardFormThirdPage'
 import WizardFormFourthPage from './WizardFormFourthPage'
 import AllDonePage from './AllDonePage'
-import { extractTweetId } from './utils'
+import { extractIdFromUrlOrId } from './utils'
 import ReactGA from './ReactGA'
 
 function updateObject(oldObject, newValues) {
@@ -30,7 +30,8 @@ class WizardForm extends Component {
 
   // I think this is why I should use redux and ... bleh
   fetchTweetPreview(values) {
-    const url = `/api/previewTweet?id=${extractTweetId(values.tweetUrlOrId)}&maxPreviousTweets=${values.maxPreviousTweets}`
+    const id = extractIdFromUrlOrId(values.tweetUrlOrId)
+    const url = `/api/previewTweet?id=${id.getId()}&namespace=${id.getNamespace()}&maxPreviousTweets=${values.maxPreviousTweets}`
     console.log(url)
     const that = this;
     fetch(url)

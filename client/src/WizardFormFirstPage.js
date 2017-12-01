@@ -2,12 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form'
 import { renderField } from './renderField'
-import { extractTweetId } from './utils.js'
+import { extractIdFromUrlOrId } from './utils.js'
 
 import './index.css';
 
 const required = value => (value ? undefined : 'Required')
-const mustBeTweet = value => value && extractTweetId(value) === null ? "Invalid input" : undefined
+const mustBeTweet = value => value && extractIdFromUrlOrId(value) === null ? "Invalid input" : undefined
 const isInteger = value =>
   value && !/^[0-9]+$/i.test(value)
     ? 'Invalid number'
@@ -32,7 +32,7 @@ let WizardFormFirstPage = props => {
           name="tweetUrlOrId"
           type="text"
           component={renderField}
-          label="Tweet URL or ID"
+          label="Tweet or Instagram URL"
           validate={[required, mustBeTweet]}
         />
         <Field

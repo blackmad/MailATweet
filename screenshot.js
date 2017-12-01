@@ -1,21 +1,18 @@
 module.exports = {
-  screenshotAndResizeTweetIdForLob: screenshotAndResizeTweetIdForLob,
-  screenshotAndResizeInstagramForLob: screenshotAndResizeInstagramForLob
+  screenshotAndResizeSocialIdForLob: screenshotAndResizeSocialIdForLob
+};
 
-}
+const puppeteer = require('puppeteer');
+const tmp = require('tmp');
+const sharp = require('sharp');
 
-const puppeteer = require('puppeteer')
-const tmp = require('tmp')
-const sharp = require('sharp')
-
-// give it a tweet url and it returns the tweet detail frame rendered
-async function screenshotInstagram ({instagramUrl, errorHandler}) {
-  console.log(`loading: ${instagramUrl}`)
+async function screenshotInstagram ({url, errorHandler}) {
+  console.log(`loading: ${url}`)
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']})
   const page = await browser.newPage()
   await page.setViewport({width: 1280, height: 2000, deviceScaleFactor: 2})
   await page.emulateMedia('screen')
-  await page.goto(instagramUrl, {waitUntil: 'networkidle'})
+  await page.goto(url, {waitUntil: 'networkidle'})
 
   page.on('error', (e) => {
     console.log('error from chrome');
@@ -65,13 +62,13 @@ async function screenshotInstagram ({instagramUrl, errorHandler}) {
 };
 
 // give it a tweet url and it returns the tweet detail frame rendered
-async function screenshotTweet ({tweetUrl, maxPreviousTweets, errorHandler}) {
-  console.log(`loading: ${tweetUrl}`)
+async function screenshotTweet ({url, maxPreviousTweets, errorHandler}) {
+  console.log(`loading: ${url}`)
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']})
   const page = await browser.newPage()
   await page.setViewport({width: 1280, height: 2000, deviceScaleFactor: 2})
   await page.emulateMedia('screen')
-  await page.goto(tweetUrl, {waitUntil: 'networkidle'})
+  await page.goto(url, {waitUntil: 'networkidle'})
 
   if (maxPreviousTweets == null) {
     maxPreviousTweets = 1;
@@ -170,21 +167,17 @@ function resizeForPostcard (imagePath) {
     })
 }
 
-async function screenshotAndResizeTweetIdForLob ({tweetId, maxPreviousTweets, errorHandler}) {
+async function screenshotAndResizeSocialIdForLob({namespace, url, maxPreviousTweets, errorHandler}) {
   console.log('got maxPreviousTweets ' + maxPreviousTweets)
-  // twitter doesn't care what user is in this path
-  return screenshotTweet({
-    tweetUrl: `https://twitter.com/Bodegacats_/status/${tweetId}`,
-    maxPreviousTweets,
-    errorHandler
-  }).then((fileName) => {
-    return resizeForPostcard(fileName)
-  })
-}
 
-async function screenshotAndResizeInstagramForLob ({instagramUrl, errorHandler}) {
-  return screenshotInstagram({
-    instagramUrl: instagramUrl,
+  var screenshotFunc = screenshotTweet;
+  if (namespace == 'instagram') {
+    screenshotFunc = screenshotInstagram
+  }
+
+  return screenshotFunc({
+    url: url,
+    maxPreviousTweets,
     errorHandler
   }).then((fileName) => {
     return resizeForPostcard(fileName)

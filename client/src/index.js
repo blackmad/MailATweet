@@ -7,7 +7,6 @@ import WizardForm from './WizardForm'
 import './redux-form.css'
 import './index.css';
 import './narrow-jumbotron.css';
-import ReactGA from './ReactGA'
 
 const reducer = combineReducers({
   form: reduxFormReducer // mounted under "form"
