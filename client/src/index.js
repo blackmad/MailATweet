@@ -31,7 +31,7 @@ class App extends Component {
  <div className="container">
       <div className="header clearfix">
 
-        <h3 className="text-muted">Mail-A-Tweet</h3>
+        <h3 className="text-muted"><a className="nounderline" href="/">Mail-A-Tweet</a></h3>
       </div>
 
       <div className="jumbotron">
@@ -48,7 +48,7 @@ class App extends Component {
             <div className="float-right">
               <div className="text-left">
                 Love,<br/>
-                <a href="https://twitter.com/blackmad">@blackmad</a>
+                <a href="https://twitter.com/blackmad" className="nounderline">@blackmad</a>
               </div>
             </div>
           </div>
