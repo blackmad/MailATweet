@@ -10,9 +10,10 @@ async function screenshotInstagram ({url, errorHandler}) {
   console.log(`loading: ${url}`)
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']})
   const page = await browser.newPage()
-  await page.setViewport({width: 1280, height: 2000, deviceScaleFactor: 2})
+  //await page.setViewport({width: 1280, height: 2000, deviceScaleFactor: 2})
+  await page.setViewport({width: 700, height: 2000, deviceScaleFactor: 2})
   await page.emulateMedia('screen')
-  await page.goto(url, {waitUntil: 'networkidle'})
+  await page.goto(url, {"waitUntil" : "networkidle0"})
 
   page.on('error', (e) => {
     console.log('error from chrome');

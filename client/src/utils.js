@@ -63,8 +63,8 @@ export function extractIdFromUrlOrId(string) {
   var twitterTestUrl = string.match(/^((?:http:\/\/)?|(?:https:\/\/)?)?(?:www\.)?(?:mobile\.)?twitter\.com\/\w+\/status\/(\d+)(?:\?.*)?$/i);
   if (twitterTestUrl) { return new TwitterId(twitterTestUrl[2]); }
 
-  var instaTestUrl = string.match(/insta.*\/p\/([A-Za-z0-9\-_]+)\/$/i);
-  if (instaTestUrl) { return new InstagramId(instaTestUrl[2]); }
+  var instaTestUrl = string.match(/insta.*\/p\/([A-Za-z0-9\-_]+)\/(?:\?.*)$/i);
+  if (instaTestUrl) { return new InstagramId(instaTestUrl[1]); }
 
   return null;
 }

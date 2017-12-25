@@ -1,4 +1,6 @@
 import React from 'react'
+import TweetEmbed from 'react-tweet-embed'
+import InstagramEmbed from 'react-instagram-embed'
 import { reduxForm } from 'redux-form'
 import { formValueSelector } from 'redux-form';  // ES6
 import { connect } from 'react-redux'
@@ -21,7 +23,23 @@ const WizardFormSecondPage = props => {
           Yes!
         </button>
       </div>
-      {socialId.renderPreview()}
+      {
+        if (socialId instanceof TwitterId) {
+          <TweetEmbed id={socialId.id} />
+        } else {
+          <InstagramEmbed
+            url={socialId.getUrl()}
+            maxWidth={320}
+            hideCaption={false}
+            containerTagName='div'
+            protocol=''
+            onLoading={() => {}}
+            onSuccess={() => {}}
+            onAfterRender={() => {}}
+            onFailure={() => {}}
+          />
+        }
+      }
     </form>
   )
 }

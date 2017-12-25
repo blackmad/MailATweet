@@ -1,6 +1,10 @@
 - get instagram wired up
+- get back to work
 - why doesn't this render? https://twitter.com/Mottel/status/907312656385822720
-- doublequotes don't work
+- why does this have a line at the bottom? https://twitter.com/DanCasey/status/944616430166831104
+- doublequotes don't work (error from Lob API)
+- make the header link back
+- make the font size mor responsive
 
 
 - see if lots of replies is fixed in chrome docker https://twitter.com/WynneOwner/status/862875812743270400
