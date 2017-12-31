@@ -53,12 +53,7 @@ class App extends Component {
             </div>
           </div>
           <div className="ps-disclaimer text-justify">
-              <strong>P.S.</strong> The API I use saves every postcard generated for at least a while, so
-              I can read anything you write. I will do my best to not look except in cases where I'm
-              debugging something or someone asks me to look specifically.
-          </div>
-          <div className="ps-disclaimer text-justify">
-              <strong>P.P.S.</strong> <a href="/about.html">More about this project</a>
+              <strong>P.S.</strong> <a href="/about.html">More about this project</a>
           </div>
         </div>
       </div>
