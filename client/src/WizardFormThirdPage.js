@@ -8,7 +8,6 @@ import Geosuggest from 'react-geosuggest';
 const required = value => (value ? undefined : 'Required')
 const maxLength = max => value =>
 value && value.length > max ? `Must be ${max} characters or less` : undefined
-const maxLength300 = maxLength(300)
 // const email = value =>
 //   value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ?
 //   'Invalid email address' : undefined
@@ -42,8 +41,6 @@ let WizardFormThirdPage = props => {
         country: getShortAddressFieldFromGeoDestination('country', geoDestination),
         postalCode: getAddressFieldFromGeoDestination('postal_code', geoDestination)
       }
-      console.log(suggest);
-      console.log(address);
 
       dispatch(change('wizard', 'address_line1', `${address.streetNumber} ${address.street}`));
       dispatch(change('wizard', 'address_city', address.city));
@@ -87,7 +84,7 @@ let WizardFormThirdPage = props => {
           type="textarea"
           component={renderTextArea}
           placeholder="Write your message here (less than 300 characters)"
-          validate={[maxLength300]}
+          validate={[maxLength(700)]}
         />
 
     <div>

@@ -26,13 +26,27 @@ class WizardForm extends Component {
       postcardPreviewImagesDone: false,
       numPostcardPreviewTries: 0
     }
+    window.history.pushState(this.state, '', '/');
+  }
+
+  componentDidMount() {
+    window.addEventListener("popstate", this.popStateHandler.bind(this));
+  }
+
+  popStateHandler(e) {
+    e.preventDefault(); // stop request to server for new html
+    e.stopPropagation();
+    if (this.state.tweetPreview && e.state.fetchingTweetPreview) {
+      e.state.fetchingTweetPreview = false;
+    }
+    this.setState(e.state);
+//    $('html,body').scrollTop(0);
   }
 
   // I think this is why I should use redux and ... bleh
   fetchTweetPreview(values) {
     const id = extractIdFromUrlOrId(values.tweetUrlOrId)
     const url = `/api/previewTweet?id=${id.getId()}&namespace=${id.getNamespace()}&url=${encodeURIComponent(id.getUrl())}&maxPreviousTweets=${values.maxPreviousTweets}`
-    console.log(url)
     const that = this;
     fetch(url)
       .then(function(response) {
@@ -42,17 +56,17 @@ class WizardForm extends Component {
           });
           throw new Error("Bad response from server");
         }
+        console.log(`got preview response for ${id.getUrl()}`)
         return response.json();
       })
       .then(function(data) {
-        console.log({tweetPreview: data})
         if (data.error) {
           ReactGA.exception({description: data.error.message, fatal: true });
           that.setState({fatalError: data.error.message, page: -1})
         } else {
+          console.log(`all good, done fetching preview ${id.getUrl()}`)
           var toReturn = {fetchingTweetPreview: false, tweetPreview: data};
           if (that.state.values.address_line1) {
-            console.log(data.id)
             toReturn = updateObject(toReturn, that.fetchPostcard({values: that.state.values, isTest: true, id: data.id}))
           }
           that.setState(toReturn);
@@ -71,7 +85,6 @@ class WizardForm extends Component {
 
     const url = '/api/sendTweet?' + query;
     const that = this;
-    console.log(url)
     fetch(url)
       .then(function(response) {
         if (response.status >= 400) {
@@ -80,8 +93,6 @@ class WizardForm extends Component {
         return response.json();
       })
       .then(function(data) {
-        console.log({postcardPreview: data})
-        console.log('updating postcard preview state')
         that.setState(updateObject(that.state, {values: values, fetchingPostcardPreview: false, postcardPreview: data}))
       });
     return {fetchingPostcardPreview: true}
@@ -89,16 +100,19 @@ class WizardForm extends Component {
 
   nextPage(values) {
     var newState = this.state;
+    console.log('moving to next page with values')
+    console.log(newState)
 
-    if (values.tweetUrlOrId && !this.state.fetchingTweetPreview) {
-      newState = updateObject(newState, this.fetchTweetPreview(values))
+    if (values.tweetUrlOrId && !this.state.fetchingTweetPreview && this.state.page != 1) {
+      console.log(`fetching tweet preview for ${values.tweetUrlOrId}`)
+      newState = updateObject(newState, this.fetchTweetPreview(values));
     } else if (values.address_line1 && !this.state.fetchingTweetPreview) {
-      console.log('kicking off preview fetch')
       newState = updateObject(newState, this.fetchPostcard({isTest: true, id: values.tweetPreview.id}))
     }
 
     newState.values = values;
     newState.page = this.state.page + 1;
+    window.history.pushState(newState, '', '/');
     this.setState(newState)
   }
 

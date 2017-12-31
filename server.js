@@ -16,6 +16,11 @@ const STRIPE_KEY = process.env.NODE_ENV === 'production'
   ? secrets.STRIPE_PROD_SECRET_KEY
   : secrets.STRIPE_TEST_SECRET_KEY;
 
+var fs = require('fs');
+
+
+var backTemplate = fs.readFileSync('./Images/postcard_4x6_back.html', 'utf8');
+
 const stripe = require('stripe')(STRIPE_KEY)
 
 // TODO: oh, these should all be POSTs
@@ -116,12 +121,40 @@ function getImageFromId (id) {
 }
 
 function makeLobDict({frontFilePath, address, message}) {
+  var fontSize = '16px'
+
+  var numNewLines = (message.match(/<br>/g) || []).length;
+
+  var fontSize = 12;
+  if (numNewLines > 6) {
+    fontSize = '12'
+  } else if (message.length < 100) {
+    fontSize = 24 - numNewLines;
+  } else if (message.length < 200) {
+    fontSize = 20 - numNewLines;
+  } else if (message.length < 300) {
+    fontSize = 17 - numNewLines;
+  } else if (message.length < 500) {
+    fontSize = 13 - numNewLines;
+  }  else {
+    fontSize = 10 - numNewLines;
+  }
+
+  if (fontSize < 10) {
+    fontSize = 10;
+  }
+
+  message = message.replace(/\n/g,"<br/>");
+
+  var backHtml = backTemplate
+    .replace('{{message}}', message)
+    .replace('{{font-size}}', fontSize)
+
   return {
       description: 'My First Postcard',
       to: address,
       front: frontFilePath,
-      back: 'http://serverlessimageresize-imagebucket-bu77xeh018n8.s3.amazonaws.com/postcard_4x6_back.html',
-      'merge_variables[message]': message
+      back: backHtml
     }
   }
 
@@ -137,8 +170,7 @@ function extractLobParams(paramDict) {
   const s3path = getImageFromId(paramDict.id)
   console.log(s3path)
 
-  var message = paramDict.message|| 'Tweet for you.';
-  message = message.replace(/\n/g,"<br/>");
+  var message = paramDict.message || 'Tweet for you.';
 
   const data = {
     frontFilePath: s3path,

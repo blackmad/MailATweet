@@ -56,8 +56,6 @@ const Checkout = ({ name, description, amount, valuesDict, doneCallback, errorCa
       amount: fromEuroToCent(amount)
     }
     const data = Object.assign({}, valuesDict, checkoutValues);
-    console.log('got these values in Checkout')
-    console.log(valuesDict)
 
     return axios.post(PAYMENT_SERVER_URL, data)
       .then(successPayment)
