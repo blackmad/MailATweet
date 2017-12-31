@@ -80,8 +80,12 @@ app.post('/api/payAndSendTweet', (req, res) => {
 });
 
 app.get('/api/previewTweet', function (req, res) {
+  console.log(req.query.namespace)
   console.log(req.query.id)
-  const tweetId = req.query.id;
+  console.log(req.query.url)
+  const namespace = req.query.namespace;
+  const url = req.query.url;
+  // const id = req.query.id;
   const maxPreviousTweets = req.query.maxPreviousTweets;
   console.log('got maxPreviousTweets ' + maxPreviousTweets)
   const errorHandler = (errorMessage) => {
@@ -92,8 +96,9 @@ app.get('/api/previewTweet', function (req, res) {
     })
   }
 
-  screenshot.screenshotAndResizeTweetIdForLob({
-    tweetId,
+  screenshot.screenshotAndResizeSocialIdForLob({
+    namespace,
+    url,
     errorHandler,
     maxPreviousTweets: maxPreviousTweets
   }).then((fileBuffer) => {

@@ -64,7 +64,7 @@ var initialValues = {
 }
 
 if (process.env.NODE_ENV === 'development') {
-    initialValues['tweetUrlOrId'] = 'https://twitter.com/Bodegacats_/status/914092267983589376';
+    initialValues['tweetUrlOrId'] = 'https://www.instagram.com/p/BZL1ZciBxX4/?taken-by=parkan';
 }
 
 WizardFormFirstPage = connect(

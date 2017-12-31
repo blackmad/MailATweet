@@ -31,7 +31,7 @@ class WizardForm extends Component {
   // I think this is why I should use redux and ... bleh
   fetchTweetPreview(values) {
     const id = extractIdFromUrlOrId(values.tweetUrlOrId)
-    const url = `/api/previewTweet?id=${id.getId()}&namespace=${id.getNamespace()}&maxPreviousTweets=${values.maxPreviousTweets}`
+    const url = `/api/previewTweet?id=${id.getId()}&namespace=${id.getNamespace()}&url=${encodeURIComponent(id.getUrl())}&maxPreviousTweets=${values.maxPreviousTweets}`
     console.log(url)
     const that = this;
     fetch(url)

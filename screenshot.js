@@ -69,7 +69,7 @@ async function screenshotTweet ({url, maxPreviousTweets, errorHandler}) {
   const page = await browser.newPage()
   await page.setViewport({width: 1280, height: 2000, deviceScaleFactor: 2})
   await page.emulateMedia('screen')
-  await page.goto(url, {waitUntil: 'networkidle'})
+  await page.goto(url, {waitUntil: 'networkidle0'})
 
   if (maxPreviousTweets == null) {
     maxPreviousTweets = 1;
@@ -170,10 +170,14 @@ function resizeForPostcard (imagePath) {
 
 async function screenshotAndResizeSocialIdForLob({namespace, url, maxPreviousTweets, errorHandler}) {
   console.log('got maxPreviousTweets ' + maxPreviousTweets)
+  console.log(namespace)
+  console.log(url)
 
-  var screenshotFunc = screenshotTweet;
+  var screenshotFunc = null;
   if (namespace == 'instagram') {
-    screenshotFunc = screenshotInstagram
+    screenshotFunc = screenshotInstagram;
+  } else if (namespace === 'twitter') {
+    screenshotFunc = screenshotTweet;
   }
 
   return screenshotFunc({

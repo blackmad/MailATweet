@@ -20,7 +20,7 @@ class TwitterId {
   }
 
   getUrl() {
-    return `https://twitter.com/Bodegacats_/status/${this.id}`;
+    return `https://twitter.com/blackmad/status/${this.id}`;
   }
 }
 
