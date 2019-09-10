@@ -12,7 +12,7 @@ var s3 = new aws.S3({
   secretAccessKey: secrets.AWS_SECRET_ACCESS_KEY
 });
 
-const bucketName = 'serverlessimageresize-imagebucket-bu77xeh018n8'
+const bucketName = 'mail-a-tweet'
 
 function makePath (path) {
   if (!path.endsWith('.png')) {
