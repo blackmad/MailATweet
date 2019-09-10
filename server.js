@@ -8,6 +8,9 @@ const path = require('path');
 const storageLayer = s3Storage
 const model = require('./model-datastore')
 
+const Sentry = require('@sentry/node');
+Sentry.init({ dsn: 'https://1215f2e1298c406d9862a532459a5eed@sentry.io/1723349' });
+
 var secrets = require('load-secrets')
 console.log('secrets')
 console.log(secrets)

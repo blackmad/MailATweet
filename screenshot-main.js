@@ -70,7 +70,7 @@ future = screenshot.screenshotAndResizeSocialIdForLob({
 
 future.then((fileBuffer) => {
   var fs = require('fs');
-  var wstream = fs.createWriteStream(tmpFileName);
+  var wstream = fs.createWriteStream(socialId.getId() + '.png');
 
   wstream.write(fileBuffer);
 
@@ -78,7 +78,6 @@ future.then((fileBuffer) => {
 
   wstream.on('finish', function () {
     const { exec } = require('child_process');
-    exec(`open ${tmpFileName}`)
     console.log('file has been written');
   });
 
