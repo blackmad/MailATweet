@@ -66,5 +66,8 @@ export function extractIdFromUrlOrId(string) {
   var instaTestUrl = string.match(/insta.*\/p\/([A-Za-z0-9\-_]+)\/(?:\?.*)$/i);
   if (instaTestUrl) { return new InstagramId(instaTestUrl[1]); }
 
+  instaTestUrl = string.match(/insta.*\/p\/([A-Za-z0-9\-_]+)\/$/i);
+  if (instaTestUrl) { return new InstagramId(instaTestUrl[1]); }
+
   return null;
 }
