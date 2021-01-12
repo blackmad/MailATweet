@@ -1,5 +1,6 @@
 #FROM node:8.6.0
 FROM zenato/puppeteer
+USER root
 WORKDIR /app
 COPY package.json /app
 RUN npm install
