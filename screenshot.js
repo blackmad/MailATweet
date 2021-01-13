@@ -14,7 +14,7 @@ async function screenshotInstagram({ url, errorHandler }) {
   const page = await browser.newPage();
   //await page.setViewport({width: 1280, height: 2000, deviceScaleFactor: 2})
   await page.setViewport({ width: 700, height: 2000, deviceScaleFactor: 2 });
-  await page.emulateMedia("screen");
+  await page.emulateMediaType("screen");
   await page.goto(url, { waitUntil: "networkidle0" });
 
   page.on("error", (e) => {
@@ -72,7 +72,7 @@ async function screenshotTweet({ url, maxPreviousTweets, errorHandler }) {
   });
   const page = await browser.newPage();
   await page.setViewport({ width: 1280, height: 2000, deviceScaleFactor: 2 });
-  await page.emulateMedia("screen");
+  await page.emulateMediaType("screen");
   await page.goto(url, { waitUntil: "networkidle0" });
 
   if (maxPreviousTweets == null) {
