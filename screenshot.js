@@ -153,8 +153,12 @@ function resizeForPostcard(imagePath) {
 
     // safe area of 5.875 x 3.875 @ 300dpi is roughly this
     return imageSharp
-      .resize(1762, 1162)
-      .max()
+      .resize({
+        width: 1762,
+        height: 1162,
+        fit: sharp.fit.inside,
+        position: sharp.strategy.entropy,
+      })
       .toBuffer()
       .then((outputBuffer) => {
         console.log("resizing second pass");
