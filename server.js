@@ -5,7 +5,7 @@ const screenshot = require("./screenshot");
 const s3Storage = require("./s3-storage");
 const path = require("path");
 const storageLayer = s3Storage;
-const model = require("./model-datastore");
+// const model = require("./model-datastore");
 
 const Sentry = require("@sentry/node");
 Sentry.init({
