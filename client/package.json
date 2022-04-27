@@ -4,7 +4,7 @@
   "private": true,
   "proxy": "http://localhost:8081/",
   "dependencies": {
-    "axios": "^0.16.2",
+    "axios": "^0.21.1",
     "google-maps": "^3.2.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
