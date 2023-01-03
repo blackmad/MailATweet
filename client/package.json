@@ -10,7 +10,7 @@
     "react-dom": "^16.0.0",
     "react-geosuggest": "^2.5.0",
     "react-instagram-embed": "^1.5.0",
-    "react-scripts": "1.0.14",
+    "react-scripts": "5.0.1",
     "react-stripe-checkout": "^2.6.3",
     "react-tweet-embed": "^1.0.8",
     "redbox-react": "^1.5.0",
